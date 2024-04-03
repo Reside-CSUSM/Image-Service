@@ -104,18 +104,20 @@ class City(__CRUD__):
 
 class State(__CRUD__):
 
+    
     def __init__(self, database):
         super().__init__()
         self.database = database
-        self.meta_data_collection = self.database["@MetaData"]
-        
+        self.meta_data_collection = self.database["@MetaData"]    
         self.city = City(database)
         self._current_state = None
         self._current_country = None
     
+
     def recieve_meta_data(self, data):
         self._current_state = data['state']
         self._current_country = data['country']
+
 
     def Create(self):
         #CHECK
@@ -124,7 +126,7 @@ class State(__CRUD__):
             value = self.meta_data_collection["_states"][self._current_state]
             return True
         except Exception as error:
-            
+
             return False
         
         pass
