@@ -30,8 +30,14 @@ class Database():
     def udpate_collection(self, name, data):
         collection = self.database[name]
         document = collection.find_one({"_id":data["_id"]})
+        if(document == None): return
+        document = dict(document)
         document["San Jose"] = []
+        print(document)
+        document.pop("San Jose")
+        print(document)
         collection.find_one_and_update({"_id":data["_id"]}, {"$set":document})
+        collection.find_one_and_delete()
 
     def delete_collection(self, name):
         collection = self.database[name]
@@ -40,8 +46,9 @@ class Database():
 
 database = Database()
 #database.create_collection("California/San-Diego")
+
 USA = {
-    "_id":"USA",
+    "_id":"TUSA",
     "California":{
         "San-Diego":"this"
     },
