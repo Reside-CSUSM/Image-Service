@@ -13,6 +13,63 @@ except Exception as e:
     print(e)
 
 
+LISTING_TEMPLATE = {
+    "Address": "",
+    "Price": "",
+    "State": "",
+    "City": "",
+    "ZipCode": "",
+    "Street": "",
+    "Stats": [
+        "$1,945/mo",
+        "1 bed",
+        "1 bath",
+        "\u2014 sq ft",
+        "21 Del Mar Ave, Chula Vista, CA 91910",
+        "A/C \u2022 Somewhat walkable \u2022 Some transit",
+        "Request a tour"
+    ],
+    "ListingNumber": "",
+    "WebElementID": "MapHomeCard_93",
+    "Filters": {
+        "Filter Settings": {
+            "Payement Type": "None",
+            "Price Range": {
+                "Price Range": {
+                    "Minimum": "None",
+                    "Maximum": "None"
+                }
+            },
+            "Home Type": "None",
+            "BedsAndBath": {
+                "BedsAndBath": {
+                    "Beds": "None",
+                    "Baths": "None"
+                }
+            },
+            "Payment Type": {
+                "Payment Type": "For rent"
+            },
+            "Home type": {
+                "Home Type": "None"
+            }
+        }
+    },
+    "Images": [
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.0_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.1_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.2_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.3_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.4_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.5_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.6_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.7_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.8_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.9_1.jpg",
+        "https://ssl.cdn-redfin.com/photo/rent/0f9060b1-ce29-4a37-a466-7a322d29e180/islphoto/genIsl.10_1.jpg"
+    ]
+}
+
 #States, Cities, Listings
 class Database():
 

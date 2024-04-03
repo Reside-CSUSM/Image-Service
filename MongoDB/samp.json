@@ -1,0 +1,20 @@
+{
+    "_id":"United States Of America",
+    "_abbreviation":"USA",
+
+    "_states":{
+        "California":{
+            "San Diego":{
+                "listings":90
+            },
+
+            "Chula Vista":{
+                "listings":90
+            }
+        },
+
+        "Texas":{
+            
+        }
+    }
+}
