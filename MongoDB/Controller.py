@@ -104,7 +104,7 @@ class City(__CRUD__):
 
 class State(__CRUD__):
 
-    
+
     def __init__(self, database):
         super().__init__()
         self.database = database
@@ -129,8 +129,7 @@ class State(__CRUD__):
 
             return False
         
-        pass
-
+    
     def Delete(self):
         pass
 
