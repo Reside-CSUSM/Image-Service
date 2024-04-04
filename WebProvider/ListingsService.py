@@ -1,3 +1,8 @@
+import sys, os
+sys.path.insert(0, r'C:\Users\yasha\Visual Studio Workspaces\OpenVisuals\OpenVisuals')
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
 from MongoDB.OpenVisualDB import OpenVisualDB, string_filter, STATE_ABBREVIATION
 import copy
 
