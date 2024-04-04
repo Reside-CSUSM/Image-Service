@@ -1,6 +1,5 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flag import Flag
 from GeoMapper import CountryResolver
 import copy
 
@@ -14,6 +13,20 @@ TEMPLATE = {
         }
     }
 }
+
+class Flag():
+
+    def __init__(self, value=False):
+        self.flag_value = False
+    
+    def set_true(self):
+        self.flag_value = True
+    
+    def set_false(self):
+        self.flag_value = False
+    
+    def check(self):
+        return self.flag_value
 
 class __CRUD__():
     
