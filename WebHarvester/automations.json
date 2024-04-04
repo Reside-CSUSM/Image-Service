@@ -1,0 +1,37 @@
+{
+    "available_services":{
+        
+        "image_collection":{
+            "redfin.com":{
+                "resource_file":"",
+                "launch_file":"",
+                "interface_file":"",
+                "status":{
+                    "support":"active",
+                    "servicable":"true"
+                }
+            },
+
+            "compass.com":{
+                "resource_file":"",
+                "launch_file":"",
+                "interface_file":"",
+                "status":{
+                    "support":"inactive",
+                    "servicable":"true"
+                }
+            },
+
+            "zillow.com":{
+                "resource_file":"",
+                "launch_file":"",
+                "interface_file":"",
+                "status":{
+                    "support":"inactive",
+                    "servicable":"false"
+                }
+            }
+        }
+
+    }
+}

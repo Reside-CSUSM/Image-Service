@@ -1,6 +1,12 @@
+import sys, os
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
+sys.path.insert(0, sys.path[0] + "\\MongoDB")
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from GeoMapper import CountryResolver
+from utility import string_filter, STATE_ABBREVIATION, Flag
 import copy
 
 
@@ -13,20 +19,6 @@ TEMPLATE = {
         }
     }
 }
-
-class Flag():
-
-    def __init__(self, value=False):
-        self.flag_value = False
-    
-    def set_true(self):
-        self.flag_value = True
-    
-    def set_false(self):
-        self.flag_value = False
-    
-    def check(self):
-        return self.flag_value
 
 class __CRUD__():
     
@@ -631,7 +623,7 @@ class ActionChainRoot():
         print("....Deleted")
     
 
-class OpenVisual():
+class OpenVisualDB():
 
     def __init__(self):
         self.uri = "mongodb+srv://yashaswikul:yash18hema06@cluster0.vktjrwl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -641,19 +633,3 @@ class OpenVisual():
 
     def ResideActionChain(self):
         return self.action_chain_root
-
-
-
-#NOTE if city collection is empty then remove the entire city from database
-#NOTE keep track of listings in stats instead of collecting all listings then counting them
-
-
-#NOTE Next step is to use Country and State Abbreviations.
-open_visuals = OpenVisual()
-value = open_visuals.ResideActionChain().Country("USA").Create()
-print(value)
-#value = open_visuals.ResideActionChain().Country("United States of America").State("California").Update({})
-
-#value = open_visuals.ResideActionChain().Country("United States of America").Delete()
-#value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Marcos").Listing("333 Roosevelt St").Create()
-#print(value)

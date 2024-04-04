@@ -157,4 +157,20 @@ value = open_visuals.ResideActionChain().Country("United States of America").Sta
 value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Diego").Listing("222 Roosevelt St").Create()
 value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Marcos").Create()
 value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Marcos").Listing("333 Roosevelt St").Create()
+
+
+#NOTE if city collection is empty then remove the entire city from database
+#NOTE keep track of listings in stats instead of collecting all listings then counting them
+
+
+#NOTE Next step is to use Country and State Abbreviations.
+open_visuals = OpenVisual()
+value = open_visuals.ResideActionChain().Country("USA").Create()
+print(value)
+#value = open_visuals.ResideActionChain().Country("United States of America").State("California").Update({})
+
+#value = open_visuals.ResideActionChain().Country("United States of America").Delete()
+#value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Marcos").Listing("333 Roosevelt St").Create()
+#print(value)
+
 """
