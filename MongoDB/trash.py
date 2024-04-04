@@ -95,6 +95,7 @@ class Database():
         print(document)
         collection.find_one_and_update({"_id":data["_id"]}, {"$set":document})
         collection.find_one_and_delete()
+        collection.estimated_document_count()
 
     def delete_collection(self, name):
         collection = self.database[name]
@@ -116,3 +117,44 @@ USA = {
 
 database.udpate_collection("@MetaData", USA)
 #CRUD on States, Cities, and Listings
+
+
+"""value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Al Paso").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Al Paso").Listing("222 Roosevelt St").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Al Paso").Listing("222 Roosevelt St").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Al Paso").Listing("222 Roosevelt St").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").City("Al Paso").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").City("Al Paso").Listing("222 Roosevelt St").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").City("Al Paso").Listing("222 Roosevelt St").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").City("Al Paso").Listing("222 Roosevelt St").Create()"""
+
+
+"""value = open_visuals.ResideActionChain().Country("United States of America").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").Create()
+
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").City("Al Paso").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Texas").City("Al Paso").Listing("111 Roosevelt St").Create()
+
+
+
+
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").Create()
+
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Diego").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Diego").Listing("222 Roosevelt St").Create()
+
+
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Marcos").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Marcos").Listing("333 Roosevelt St").Create()
+
+
+
+value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").Create()
+
+value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Diego").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Diego").Listing("222 Roosevelt St").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Marcos").Create()
+value = open_visuals.ResideActionChain().Country("United States of America").State("Arizona").City("San Marcos").Listing("333 Roosevelt St").Create()
+"""

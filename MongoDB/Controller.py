@@ -15,7 +15,6 @@ TEMPLATE = {
     }
 }
 
-
 class __CRUD__():
     
     def __init__(self):
@@ -57,19 +56,20 @@ class Listing(__CRUD__):
         else:
             return False
         
-    def __listing_exists(self):
+    def __listing_exists(self, get_listing=False):
         if(self.__collection_exists() == False):
             return False
         
         PATH  = self._current_country + "/" + self._current_state + "/" + self._current_city
         collection = self.database[PATH]
-        value = collection.find_one({"Address":self._current_listing})
+        document = collection.find_one({"Address":self._current_listing})
         #BUG HERE, value is returning none if not found but if statement below is not catching it
-        if(str(type(value)) == "<class 'NoneType'>"):
+        if(str(type(document)) == "<class 'NoneType'>"):
             return False
         else:
+            if(get_listing == True):
+                return dict(document)
             return True
-        
 
     def recieve_meta_data(self, data):
         self._current_listing = data['listing']
@@ -78,7 +78,9 @@ class Listing(__CRUD__):
         self._current_country = data['country']
 
     def Create(self, data=None):
+        print("Listing", self._current_listing, end="")
         if(self.__listing_exists() == True):
+            print("...Already exists")
             return True
         
         if(self.__collection_exists() == False):
@@ -95,32 +97,57 @@ class Listing(__CRUD__):
             template['City'] = self._current_city
             template['State'] = self._current_state
             value = collection.insert_one(template)
-            if(value == None): return False
-            else:return True
+            if(value == None): 
+                print("...Couldn't create(error)")
+                return False
+            else:
+                print("...Created")
+                return True
+
         else:
             data['Address'] = self._current_listing
             data['City'] = self._current_city
             data['State'] = self._current_state
             value = collection.insert_one(data)
-            if(value == None): return False
-            else:return True
+            if(value == None):
+                print("...Couldn't create(error)")
+                return False
+            else:
+                print("...Created")
+                return True
         
-
     def Delete(self):
+        print("Deleted", self._current_listing, end="")
         if(self.__listing_exists() == False):
+            print("...Doesn't exist to Delete")
             return True
         
         collection = self.database[self._current_country + "/" + self._current_state + "/" + self._current_city]
         value = collection.find_one_and_delete({"Address":self._current_listing})
-        if(value == None):return False
+        if(value == None):
+            print("...\x1b[31mCouldn't delete (error)/x1b[0m")
+            return False
         else:return True
     
     def Search(self):
-        return self.__listing_exists()
+        print("Searching", self._current_listing, end="")
+        doc = self.__listing_exists(True)
+
+        if(isinstance(doc, dict) == True):
+            return doc
+        
+        if(doc == True):
+            print("...Found")
+            return True
+        
+        print("...Not found")
+        return False
     
 
     def Update(self, data):
+        print("Updating", self._current_listing, end="")
         if(self.__listing_exists() == False):
+            print("...Doesn't exist to update")
             return False
         
         collection = self.database[self._current_country + "/" + self._current_state + "/" + self._current_city]
@@ -130,8 +157,13 @@ class Listing(__CRUD__):
             listing[item[0]] = item[1]
 
         value = collection.find_one_and_update({"Address":self._current_listing}, {"$set":listing})
-        if(value == None): return False
-        else:return True
+        if(value == None):
+            print("...Couldn't Update(error)")
+            return False
+        
+        else:
+            print("...Updated")
+            return True
         
 
 
@@ -157,13 +189,32 @@ class City(__CRUD__):
         except Exception as error:
             return False
 
+    def __collection_exists(self, get_collection=False):
+        PATH  = self._current_country + "/" + self._current_state + "/" + self._current_city
+        list = self.database.list_collection_names()
+        if(PATH in list):
+            if(get_collection==True):
+                return self.database[PATH]
+            return True
+        else:
+            return False
+        
     def recieve_meta_data(self, data):
         self._current_city = data['city']
         self._current_state = data['state']
         self._current_country = data['country']
 
+    def SelectCity(self, name):
+        self._current_city = name
+        return self
+    
+    def GetCurrentCity(self):
+        return self._current_city
+
     def Create(self, params=None):
+        print("Creating City", self._current_city, end = "")
         if(self.__city_exists() == True):
+            print("...Already Exists")
             return True
         
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
@@ -172,34 +223,41 @@ class City(__CRUD__):
         state[self._current_city] = {}
 
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
+        print("...Created")
         return True
 
     def Delete(self):
+        print("Deleting City", self._current_city, end = "")
         if(self.__city_exists() == False):
+            print("...Doesn't exist to delete")
             return False
         
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         states = value["_states"]
         states[self._current_state].pop(self._current_city)
-        self.meta_data_collection.find_one_and_update({"_id":self._current_country}, value)
+        self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
+
+        #CHECK: If collection exists for current city then delete it
+        collection = self.__collection_exists(True)
+        if(collection != False):
+            collection.drop()
+        print("...Deleted")
         return True
     
-    
     def Search(self):
+        print("Searching", self._current_city, end="")
         if(self.__city_exists() == False):
+            print("...Not found")
             return False
         
-        value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
-        states = value["_states"]
-        try:
-            city = states[self._current_state][self._current_city]
-            return True
-        except Exception as error:
-            return False
+        print("...Found")
+        return True
         
         
     def Update(self, city_data):
+        print("Updating", self._current_city, end="")
         if(self.__city_exists() == False):
+            print("...Doesn't exist to Update")
             return False
         
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
@@ -211,8 +269,12 @@ class City(__CRUD__):
             listings[item[0]] = item[1]
 
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, value)
+        print("...Updated")
 
     def Listing(self, name):
+        if(self.__city_exists() == False):
+            return None
+        
         data = {
             'country':self._current_country,
             'state':self._current_state,
@@ -222,6 +284,18 @@ class City(__CRUD__):
         self.listing.recieve_meta_data(data)
         return self.listing
     
+    def EstimateListings(self):
+        return self.__collection_exists(True).estimate_document_count()
+    
+    def GetAllListings(self):
+        list = self.__collection_exists(True).find({})
+        new_list = []
+
+        for listing in list:
+            new_list.append(listing['Address'])
+        return new_list
+
+
 
 class State(__CRUD__):
 
@@ -236,7 +310,6 @@ class State(__CRUD__):
     def __state_exists(self):
         try:
             value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
-            
             value = value["_states"][self._current_state]
     
             return True
@@ -248,45 +321,87 @@ class State(__CRUD__):
         self._current_state = data['state']
         self._current_country = data['country']
 
-
+    def SelectState(self, name):
+        self._current_state = name
+        return self
+    
+    def GetCurrentState(self):
+        return self._current_state
+    
     def Create(self, date=None):
         #CHECK
+        print("Creaating", self._current_state, end="")
         if(self.__state_exists() == True):
+            print("...Already exists")
             return True
         
-        print("country", self._current_country)
-        print("state", self._current_state)
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         state = value["_states"]
         state[self._current_state] = {}
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
+        print("...Created")
         return True
-        
+    
+
     def Delete(self):
         #CHECK
+        print("Deleting", self._current_state, end="")
         if(self.__state_exists() == False):
+            print("...Already Doesn't exists")
             return False
     
+        #Get all city object and delete them
+        to_be_deleted = self.GetAllCities()
+        
+        for city in to_be_deleted:
+            data = {'city':city, 'country':self._current_country, 'state':self._current_state}
+            self.city.recieve_meta_data(data)
+            self.city.SelectCity(city).Delete()
+
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         value["_states"].pop(self._current_state)
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
+        print("...Deleted")
         return True
 
+
+    def EstimateCities(self):
+        #KEEP Track of the count number and return it
+        pass
+    
+    def GetAllCities(self):
+        list = self.database.list_collection_names()
+        new_list = []
+        for element in list:
+            if(self._current_country + "/" + self._current_state  in element):
+                new_list.append(element.split("/")[2])
+        return new_list
+
+
     def Search(self):
+        print("Searching", self._current_state, end="")
         if(self.__state_exists() == False):
+            print("...Doesn't exist to search")
             return False
         
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         states = value["_states"]
         
         if(self._current_state in states.keys()):
+            print("...Found")
             return True
 
+        print("...Not Found")
         return False
 
+
     def Update(self, state_data):
+        print("Update", self._current_state, end="")
         if(self.__state_exists() == False):
+            print("...Doesn't exist to update")
             return False
+        
+
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         states = value["_states"]
         cities = states[self._current_state]
@@ -295,6 +410,7 @@ class State(__CRUD__):
             cities[item[0]] = item[1]
         
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
+        print("...Updated")
         return True
     
     
@@ -308,6 +424,9 @@ class State(__CRUD__):
         return False
     
     def City(self, name):
+        if(self.__state_exists() == False):
+            return None
+        
         data = {
             'country':self._current_country,
             'state':self._current_state,
@@ -334,9 +453,18 @@ class Country(__CRUD__):
     def recieve_meta_data(self, data):
         self._current_country = data['country']
 
+    def SelectCountry(self, name):
+        self._current_country = name
+        return self
+
+    def GetCurrentCountry(self):
+        return self._current_country
+    
     def Create(self, data=None):
         #Check if it already exists if yes then exit
+        print("Creating", self._current_country, end="")
         if(self.__country_exists()==True):
+            print("....Country Already Exists")
             return True
 
         template = copy.copy(TEMPLATE)
@@ -344,27 +472,62 @@ class Country(__CRUD__):
         template["_abbreviation"]= CountryResolver.ResolveToAbbr(self._current_country)
 
         value = self.meta_data_collection.insert_one(template)
-        if(value == None):return False
-        else: return True
+        if(value == None):
+            print(".../x1b[31mCouldn't Create (error)/x1b[0m")
+            return False
+    
+        else: 
+            print("...Created")
+            return True
     
     def Delete(self):
         #Delete the collections as well
+        print("Deleting", self._current_country, end="")
         if(self.__country_exists() == False):
+            print("... Doesn't exist to Delete")
             return False
         
-        value = self.meta_data_collection.find_one_and_delete({"_id":self._current_country})
-        if(value != None):
-            return True
-        else: return False 
+        #Get all the states and delete them
+        to_be_deleted = self.GetAllStates()
 
+        for state in to_be_deleted:
+            data = {'country':self._current_country, 'state':state}
+            self.state.recieve_meta_data(data)
+            self.state.SelectState(state).Delete()
+
+        value = self.meta_data_collection.find_one_and_delete({"_id":self._current_country})
+        if(value == None):
+            print(".../x1b[31mCouldn't delete (error)/x1b[0m")
+            return False
+        print("...Deleted")
+        return True 
+    
+
+    def EstimateStates(self):
+        #KEEP Track of the count number and return it
+        pass
+    
+    def GetAllStates(self):
+        new_list = []
+        list = self.database.list_collection_names()
+
+        for element in list:
+            if(self._current_country in element):
+                new_list.append(element.split("/")[1])
+        return new_list
+    
     def Search(self):
+        print("Searching", self._current_country, end="")
         if(self.__country_exists() == False):
+            print("...Doesn't exist to search")
             return False
         
         value = self.meta_data_collection.find_one({"_id":self._current_country})
         if(value == None):
+            print(".../x1b[31mNot Found (error)/x1b[0m")
             return False
         elif(value != None):
+            print("...Found")
             return True
 
     def Fetch(self):
@@ -377,10 +540,13 @@ class Country(__CRUD__):
         return False
 
     def Update(self, updated_template):
+        print("Updating", self._current_country, end="")
         if(self.__country_exists() == True):
+            print("...Doesn't Exist to Update")
             return True
         
         if(("_id" in updated_template.keys()) == False):
+            print(".../x1b[31mCouldn't update (error)/x1b[0m")
             return False
         
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
@@ -390,10 +556,18 @@ class Country(__CRUD__):
             states[item[0]] = item[1]
 
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
-        if(value == None):return False
-        else: return True
+        if(value == None):
+            print(".../x1b[31mCouldn't update (error)/x1b[0m")
+            return False
+    
+        else: 
+            print("...Updated")
+            return True
 
     def State(self, name):
+        if(self.__country_exists() == False):
+            return None
+        
         data = {
             'country':self._current_country,
             'state':name
@@ -405,8 +579,22 @@ class Country(__CRUD__):
 class ActionChainRoot():
 
     def __init__(self, database):
+        self.database = database
         self.country = Country(database)
 
+    def EstimateCountries(self):
+        #KEEP Track of the count number and return it
+        pass
+    
+    def GetAllCountries(self):
+        new_list = []
+        list = self.database.list_collection_names()
+
+        for element in list:
+            new_list.append(element.split("/")[0])
+        
+        return new_list
+    
     def Country(self, name):
         data = {
             'country':name
@@ -414,6 +602,17 @@ class ActionChainRoot():
         self.country.recieve_meta_data(data)
         return self.country
 
+    def Delete(self):
+        print("Deleting All Collection")
+        to_be_deleted = self.GetAllCountries()
+
+        for country in to_be_deleted:
+            data = {'country':country}
+            self.country.recieve_meta_data(data)
+            self.country.SelectCountry(country).Delete()
+
+        print("....Deleted")
+    
 
 class OpenVisual():
 
@@ -427,10 +626,15 @@ class OpenVisual():
         return self.action_chain_root
 
 
+
+#NOTE if city collection is empty then remove the entire city from database
+#NOTE keep track of listings in stats instead of collecting all listings then counting them
+
 open_visuals = OpenVisual()
-value = open_visuals.ResideActionChain().Country("United States of America").Create()
-print(value)
+"""value = open_visuals.ResideActionChain().Country("United States of America").Create()
+print(value)"""
 #value = open_visuals.ResideActionChain().Country("United States of America").State("California").Update({})
-value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Otay Ranch").Listing("111 Roosevelt S").Search()
+
+value = open_visuals.ResideActionChain().Country("United States of America").Delete()
 #value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Otay Ranch").Listing("111 Roosevelt St").Update({"Filter":None, "HomeCard":"maphome_135"})
 print(value)
