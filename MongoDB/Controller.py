@@ -127,7 +127,9 @@ class Listing(__CRUD__):
         if(value == None):
             print("...\x1b[31mCouldn't delete (error)/x1b[0m")
             return False
-        else:return True
+        else:
+            print("...Deleted")
+            return True
     
     def Search(self):
         print("Searching", self._current_listing, end="")
@@ -164,7 +166,6 @@ class Listing(__CRUD__):
         else:
             print("...Updated")
             return True
-        
 
 
 class City(__CRUD__):
@@ -469,7 +470,10 @@ class Country(__CRUD__):
 
         template = copy.copy(TEMPLATE)
         template["_id"] = self._current_country
-        template["_abbreviation"]= CountryResolver.ResolveToAbbr(self._current_country)
+        try:
+            template["_abbreviation"] = CountryResolver.ResolveToAbbr(self._current_country)
+        except Exception as error:
+            template["_abbreviation"] = self._current_country
 
         value = self.meta_data_collection.insert_one(template)
         if(value == None):
@@ -630,11 +634,13 @@ class OpenVisual():
 #NOTE if city collection is empty then remove the entire city from database
 #NOTE keep track of listings in stats instead of collecting all listings then counting them
 
+
+#NOTE Next step is to use Country and State Abbreviations.
 open_visuals = OpenVisual()
-"""value = open_visuals.ResideActionChain().Country("United States of America").Create()
-print(value)"""
+value = open_visuals.ResideActionChain().Country("USA").Create()
+print(value)
 #value = open_visuals.ResideActionChain().Country("United States of America").State("California").Update({})
 
-value = open_visuals.ResideActionChain().Country("United States of America").Delete()
-#value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("Otay Ranch").Listing("111 Roosevelt St").Update({"Filter":None, "HomeCard":"maphome_135"})
-print(value)
+#value = open_visuals.ResideActionChain().Country("United States of America").Delete()
+#value = open_visuals.ResideActionChain().Country("United States of America").State("California").City("San Marcos").Listing("333 Roosevelt St").Create()
+#print(value)

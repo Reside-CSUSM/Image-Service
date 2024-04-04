@@ -1,7 +1,13 @@
 
 COUNTRY_ABBREVIATION = {
     "India":"IND",
-    "United States of America":"USA",
+    "United States of America":{
+        "_abbreviation":"USA",
+        "_states":{
+            "California":"CA",
+            "Arizona":"AZ"
+        }
+        },
     "Australia":"AUS",
     "China":"CN"
 }
