@@ -4,22 +4,10 @@
         {
             "src":"./harvester.py",
             "use":"@vercel/python"
-        },
-        {
-            "src":"./provider.py",
-            "use":"@vercel/python"
-         }
+        }
     ],
 
     "routes":[
-        {
-            "src":"/(.*)",
-            "dest":"/harvester.py",
-            "methods":["GET", "POST", "PUT"],
-            "headers":{
-                "Access-Control-Allow-Origin": "*"
-            }
-        },
         {
             "src":"/(.*)",
             "dest":"/provider.py",
@@ -28,7 +16,5 @@
                 "Access-Control-Allow-Origin": "*"
             }
         }
-
-    
     ]
 }
