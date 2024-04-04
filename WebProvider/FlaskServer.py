@@ -1,9 +1,9 @@
 #sys.path.insert(0, r"C:\Users\kulsh001\AppData\Local\Programs\Python\Python311\Lib\site-packages")
-import sys, os
+"""import sys, os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
-print(sys.path[0], "<--this")
+print(sys.path[0], "<--this")"""
 from flask import Flask, request
 from ListingsService import ListingService
 app = Flask(__name__)
