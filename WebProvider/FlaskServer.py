@@ -45,7 +45,7 @@ listing_images_service = ListingService()
 
 @app.route("/")
 def root():
-    return "cloud server is running"
+    return "cloud listing provider is running"
 
 
 @app.route("/ResideLibraryVerbose/Images", methods=["POST", "GET"])
