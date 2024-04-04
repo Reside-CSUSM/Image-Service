@@ -67,7 +67,6 @@ class CacheUpdates():
 
 
 def console():
-    image_api.initialize('38.56.138.77', 8888)
     cache_updates = CacheUpdates()
     while(True):
         os.system('cls')
@@ -187,6 +186,7 @@ def ConsoleStartUp():
         if(value == "y" or value == "Y"):
             Host.TARGET_IP = IP
             Host.TARGET_PORT = PORT
+            image_api.initialize(Host.TARGET_IP, Host.TARGET_PORT)
             console()
             break
 

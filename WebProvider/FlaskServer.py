@@ -83,31 +83,19 @@ def ListingImagesEndpointVerbose():
                
 @app.route("/ResideLibrary/Images", methods=["POST", "GET"])
 def ListingImagesEndpoint():
-    responses = []
-    response = ServerResponse()
-        
-    print("inside route")
     if(request.is_json == True):
         try:
             address = request.get_json()["Listing"]
             print("listing here",address)
             if(len(address) == 0):
-                response.set_error(True)
-                response.put_error_log('No Images when listing are not given')
+                print('No Images when listing are not given')
                 return 'None'
             
         except KeyError as error:
-            response.set_error(True)
-            response.put_error_log("'Listing' key is  missing in json data")
             print("'Listing' key is  missing in json data")
             return 'None'
-            
-             
-        print("element array")
+        
         listing = listing_images_service.fetch(address)
-       
-        response.set_error(False)
-        response.put_payload(responses)
         if(listing != None and listing != False):
             print(listing)
             return listing["Images"]
@@ -116,7 +104,7 @@ def ListingImagesEndpoint():
     else:
         return 'None'
      
-          
+
 @app.route("/endpoint", methods=["POST", "GET", "PUT"])
 def endpoint():
     try:
@@ -136,5 +124,4 @@ def endpoint():
 if __name__ == "__main__":
     print("entered wsgi.py ....")
     print("app is running")
-    #app.run(host='0.0.0.0', port=80)
-app.run(host='192.168.1.222', port=8888)
+    app.run(host='0.0.0.0', port=80)

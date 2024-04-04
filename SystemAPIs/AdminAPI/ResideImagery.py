@@ -76,7 +76,7 @@ class GeneralSearchPayload():
             "service_type":"image_collection",
             "service_name":"redfin",
             "client_request_data":{
-                "filters":[""],
+                "filters":[],
                 "listing_requested":{
                     "type":"city&state",
                     "area":[],
@@ -97,6 +97,9 @@ class GeneralSearchPayload():
         return self
 
     def add_filters(self, filter):
+        #WARNING: Here it appends the filter instead of just assigning it. 
+        #IDEA was to keep an array so multiple filters can be applied
+        #In this case we're not using any other filters except 'For rent' and 'For sale'
         self.payload["client_request_data"]["filters"].append(filter)
         return self
     

@@ -23,7 +23,6 @@ class AvailableServices():
         #Dynamically import modules of new automation folders/systems
         pass
 
-    pass
 
 
 class AutomationService():
@@ -59,8 +58,6 @@ class AutomationService():
                 print("Success on retrying the decoding tho...")
             except Exception as error:
                 print("Failure on retrying to decode as well.....")
-                pass
-
 
     def get_response(self):
         return self.responses
@@ -154,6 +151,7 @@ class AutomationService():
 
                 elif(type == "city&state"):
                     filters = response["client_request_data"]["filters"]
+                    
                     areas = listing_requested["area"]
                     error_count = None
                     for area in areas:

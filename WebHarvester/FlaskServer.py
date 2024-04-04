@@ -82,6 +82,6 @@ def endpoint():
 if __name__ == "__main__":
     print("entered wsgi.py ....")
     print("app is running")
-    #app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80)
 
-app.run(host='192.168.1.222', port=9999)
+#app.run(host='192.168.1.222', port=9999)
