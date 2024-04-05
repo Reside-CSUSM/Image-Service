@@ -1,3 +1,8 @@
+import sys, os
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
+sys.path.insert(0, sys.path[0] + "\\MongoDB")
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from MongoDB.GeoMapper import CountryResolver
