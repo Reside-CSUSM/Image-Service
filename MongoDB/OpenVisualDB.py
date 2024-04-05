@@ -5,8 +5,8 @@ sys.path.insert(0, parent_dir_path)
 sys.path.insert(0, sys.path[0] + "\\MongoDB")
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from .GeoMapper import CountryResolver
-from .utility import string_filter, STATE_ABBREVIATION, Flag
+from MongoDB.GeoMapper import CountryResolver
+from MongoDB.utility import string_filter, STATE_ABBREVIATION, Flag
 import copy
 
 
