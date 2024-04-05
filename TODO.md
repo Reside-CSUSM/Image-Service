@@ -10,3 +10,7 @@
 
 
 #FIX update mechanism shudnt launch bot 3 times and it shudn't create new documents in db instead on update delete previous collection and repopulate documents. Or we can use collection.replace() in case of update
+
+
+#issue fixed bot now launches only two times for single area on update, it was adding mamy areas causing bots to launch many times
+#still it has extra for
