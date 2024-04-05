@@ -630,6 +630,13 @@ class OpenVisualDB():
         self.mongo_client = MongoClient(self.uri, server_api=ServerApi('1'))
         self.database = self.mongo_client["OpenVisualDB"]
         self.action_chain_root = ActionChainRoot(self.database)
-
+        self.disable_flag = False
+        
+    def disable(self):
+        self.disable_flag = True
+        pass
     def ResideActionChain(self):
+        if(self.disable_flag == True):
+            return None
+        
         return self.action_chain_root

@@ -1,3 +1,11 @@
+import sys, os
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
+sys.path.insert(0, parent_dir_path)
+dir = parent_dir_path.replace("\Automations", "")
+print(dir)
+sys.path.insert(0, dir)
+print(sys.path[0], "<--this")
 from Utility.bot import Bot
 from selenium import webdriver
 from Utility.utility import _ID, Flag
@@ -438,12 +446,13 @@ class HomeType():
 class PaymentType():
 
     def __init__(self, bot):
+
         self.bot = bot
-        self.bot_flag = Flag()
-        self.main_payment_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div', self.bot)
+        self.bot_flag = Flag()                              
+        self.main_payment_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[1]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div', self.bot)
         self.for_rent = ElementPointer(By.ID, 'forRent', self.bot)
         self.for_sale = ElementPointer(By.ID, 'for-sale', self.bot)
-        self.done_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div/div[2]/div/div[2]/button', self.bot)
+        self.done_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[1]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div/div[2]/div/div[2]/button', self.bot)
         self.settings ={
             'Payment Type':"None"
         }
@@ -455,40 +464,49 @@ class PaymentType():
 
     def click_payment_type_button(self):
         try:
+            print("\x1b[33mTrying to click on on Main Payment Type Button\x1b[0m")
             self.main_payment_button.create_pointer()
             self.main_payment_button.element().click()
+            print("\x1b[33mClicked on Main Payment Type Button\x1b[0m")
         except Exception as error:
-            print("PaymentType Error:", error)
-            raise error
+            print("PaymentType Error \x1b[31m MAIN Payment Button not working\x1b[0m:", error)
+            #raise error  for some putting raise error doesn't print the print statments, same with return None
+            #return None
+            pass
         return self
     
     def click_for_rent_button(self):
         try:
+            print("\x1b[33mTrying to Click on For Rent Type Button\x1b[0m")
             self.for_rent.create_pointer()
             self.for_rent.element().click()
             self.settings['Payment Type'] = 'For rent'
+            print("\x1b[33mClicked on For Rent Type Button\x1b[0m")
         except Exception as error:
-            print("PaymentType Error:", error)
+            print("PaymentType Error:\x1b[31m For Rent button isn't working\x1b[0m", error)
             raise error
         return self
     
     def click_for_sale_button(self):
         try:
+            print("\x1b[33mTrying to click on For Sale Type Button\x1b[0m")
             self.for_sale.create_pointer()
             self.for_sale.element().click()
             self.settings['Payment Type'] = 'For sale'
+            print("\x1b[33mClicked on For Sale Type Button\x1b[0m")
         except Exception as error:
-            print("PaymentType Error:", error)
-            raise error
-        
+            print("PaymentType Error:\x1b[31m For sale button isn't working\x1b[0m", error)
+            raise error  
         return self
 
     def click_done(self):
         try:
+            print("\x1b[33mTrying to click on Done  Button\x1b[0m")
             self.done_button.create_pointer()
             self.done_button.element().click()
+            print("\x1b[33mClicked on Done  Button\x1b[0m")
         except Exception as error:
-            print("PaymentType Error:", error)
+            print("PaymentType Error: \x1b[31m'Done' Button isn't working \x1b[0m", error)
             raise error
         return self
     
@@ -798,15 +816,18 @@ class GeneralLocation():
         #________________________________________
 
         print("ABBREVIATIONS: ", STATE_ABBREVIATION[state])
-        state_exists = OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).Search()
-        city_exists = OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Search()
-        if(state_exists == False):
-            OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).Create()
-            OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Create()
-        
-        elif(state_exists == True):
-            if(city_exists == False):
+        try:
+            state_exists = OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).Search()
+            city_exists = OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Search()
+            if(state_exists == False):
+                OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).Create()
                 OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Create()
+            
+            elif(state_exists == True):
+                if(city_exists == False):
+                    OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Create()
+        except Exception as error:
+            pass
 
         print(state, city, "this is another state, city")
         try:
@@ -821,7 +842,9 @@ class GeneralLocation():
                     #self.jsonified_listings.append((listing.export('json')))
                     print("Collected element: ", element.get_attribute('id'))
                     listing_json = listing.export('json')
-                    OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Listing(listing_json['Address']).Create(listing_json)
+
+                    try:OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Listing(listing_json['Address']).Create(listing_json)
+                    except Exception as error: pass
 
                 else:print("\x1b[31mCouldn't collect element\x1b[0m", element.get_attribute('id'))
         except Exception as error:
@@ -1160,11 +1183,3 @@ class RedfinBot():
     
     def close(self):
         self.bot.close()
-
-
-"""bot = RedfinBot()
-bot.activate()
-bot.save_filters(['For rent'])
-#print(bot.address('5210 Rain Creek Pkwy, Austin, TX', 'specific').location('specific').get_response())
-print(bot.address('La Mesa, CA').location('general').get_response())
-"""
