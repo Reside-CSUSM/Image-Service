@@ -45,8 +45,53 @@ listing_images_service = ListingService()
 
 @app.route("/")
 def root():
-    return "cloud listing provider is running"
+    return "cloud listing provider server is running"
 
+@app.route("/details")
+def details():
+    Details = """
+    OpenVisual Cloud deployment
+    ____________________________
+
+    [Details]
+    Component: WebProvider
+    Platform:  Vercel
+    Language:  Python
+
+    Component: WebHarvester
+    Platform:  Vercel
+    Language: Python
+
+    [Tech Stack For Reside Platform]:
+    Selenium
+    MongoDB
+    SpringBoot
+    React.js
+    Next.js
+    Vercel(Cloud Deployment)
+    
+    Platform Languages: Python, Type Script, JavaScript and Java
+
+
+    [About]:
+    OpenVisual is a service which provides access to Real Estate and Rental Images to users.
+    It has three main components. 
+
+    1) Image Collection System:
+       This system allows OpenVisual to extract images by using large scale webscraping.
+       OpenVisual Launches Bots periodically to collect Images and store them in central database.
+       Flexible system allows many bots to be launched remotely from a client
+    
+    2) Image Provider system:
+       This system allows users on internet to connect over Http:// Endpoint and request images on a given
+       property address. Upon Match server returns the images. Users can request multiple listings or single listings
+       over two different endpoints. 
+    
+    3) Admin Client
+       A program that allows OpenVisual Admins to manage, control and update central database by remotely launching
+       bots over a private http:// endoint
+    """
+    return Details
 
 @app.route("/ResideLibraryVerbose/Images", methods=["POST", "GET"])
 def ListingImagesEndpointVerbose():
