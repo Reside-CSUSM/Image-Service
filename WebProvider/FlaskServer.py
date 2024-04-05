@@ -50,46 +50,47 @@ def root():
 @app.route("/details")
 def details():
     Details = """
-    OpenVisual Cloud deployment
-    ____________________________
+    OpenVisual Cloud deployment\n
+    ____________________________\n
 
-    [Details]
-    Component: WebProvider
-    Platform:  Vercel
-    Language:  Python
-
-    Component: WebHarvester
-    Platform:  Vercel
-    Language: Python
-
-    [Tech Stack For Reside Platform]:
-    Selenium
-    MongoDB
-    SpringBoot
-    React.js
-    Next.js
-    Vercel(Cloud Deployment)
-    
-    Platform Languages: Python, Type Script, JavaScript and Java
-
-
-    [About]:
-    OpenVisual is a service which provides access to Real Estate and Rental Images to users.
-    It has three main components. 
-
-    1) Image Collection System:
-       This system allows OpenVisual to extract images by using large scale webscraping.
-       OpenVisual Launches Bots periodically to collect Images and store them in central database.
-       Flexible system allows many bots to be launched remotely from a client
-    
-    2) Image Provider system:
-       This system allows users on internet to connect over Http:// Endpoint and request images on a given
-       property address. Upon Match server returns the images. Users can request multiple listings or single listings
-       over two different endpoints. 
-    
-    3) Admin Client
-       A program that allows OpenVisual Admins to manage, control and update central database by remotely launching
-       bots over a private http:// endoint
+    [Details]\n
+    Component: WebProvider\n
+    Platform:  Vercel\n
+    Language:  Python\n
+    \n
+    Component: WebHarvester\n
+    Platform:  Vercel\n
+    Language: Python\n
+    \n
+    [Tech Stack For Reside Platform]:\n
+    Selenium\n
+    MongoDB\n
+    SpringBoot\n
+    React.js\n
+    Next.js\n
+    Vercel(Cloud Deployment)\n
+    \n
+    Platform Languages: Python, Type Script, JavaScript and Java\n
+    \n
+    \n
+    [About]:\n
+    OpenVisual is a service which provides access to Real Estate and Rental Images to users.\n
+    It has three main components.\n 
+    \n
+    1) Image Collection System:\n
+       This system allows OpenVisual to extract images by using large scale webscraping.\n
+       OpenVisual Launches Bots periodically to collect Images and store them in central database.\n
+       Flexible system allows many bots to be launched remotely from a client\n
+    \n
+    2) Image Provider system:\n
+       This system allows users on internet to connect over Http:// Endpoint and request images on a given\n
+       property address. Upon Match server returns the images. Users can request multiple listings or single listings\n
+       over two different endpoints.\n 
+    \n
+    3) Admin Client\n
+       A program that allows OpenVisual Admins to manage, control and update central database by remotely launching\n
+       bots over a private http:// endoint\n
+       \n
     """
     return Details
 
