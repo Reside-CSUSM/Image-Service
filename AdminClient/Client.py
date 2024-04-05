@@ -39,6 +39,7 @@ class AreaUpdate(ResideImageryAdapter):
 
         time.sleep(1)
         self.remove_general_search_filter(self.filter2)
+        self.delete_area(self._city + ", " + self._state)
         self.add_general_search_filter(self.filter1)
         self.add_areas(self._city + ", " + self._state)
         
