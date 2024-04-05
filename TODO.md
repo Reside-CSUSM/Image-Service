@@ -7,3 +7,6 @@
 
 #In order to deploy on vercel don't use relative imports within a folder
 #Specify parent package as well. For example:  Don't -> from utility import object.   Do->  from MongoDB.utility import object
+
+
+#FIX update mechanism shudnt launch bot 3 times and it shudn't create new documents in db instead on update delete previous collection and repopulate documents. Or we can use collection.replace() in case of update

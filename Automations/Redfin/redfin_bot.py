@@ -1146,9 +1146,9 @@ class RedfinBot():
                 print("Duplicate filter", filter)
                 continue
             print("____Processing filters in list______")
-            self.__apply_filter(filter)
             filter_list.append(filter)
-
+            self.__apply_filter(filter)
+            
     def __apply_filter(self, value):
         print("*****Entered single filter*****")
         home_types = ['town_house', 'condo', 'land', 'multi_family', 'mobile', 'co_op', 'other']

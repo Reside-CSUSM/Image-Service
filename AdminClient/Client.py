@@ -140,11 +140,16 @@ def console():
             print("\n\n/set host> ", end="")
             print("Enter host server ip: ", end="")
             ip = input()
-
+            if(ip == "exit"):
+                continue
             print("\nEnter host server port: ", end="")
             port = input()
+            if(port == "exit"):
+                continue
+            
+            Host.TARGET_IP = ip
+            Host.TARGET_PORT = port
             image_api.initialize(ip, port)
-            pass
 
         elif (val == "show areas"):
             print("\n\n/show areas> ", end="")
@@ -173,7 +178,7 @@ def ConsoleStartUp():
     while(True):
         print("\n\nEnter the target/host IP: ", end = "")
         IP = input()
-
+        
         print("Enter the target/host PORT: ", end="")
         PORT = input()
 
@@ -193,6 +198,5 @@ def ConsoleStartUp():
         elif(value == "N" or value == "n"):
             print("\x1b[31mConsole Exited\x1b[0m")
             break
-
 
 ConsoleStartUp()
