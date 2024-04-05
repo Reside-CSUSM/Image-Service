@@ -38,6 +38,7 @@ class AreaUpdate(ResideImageryAdapter):
             #print("\x1b[31mConnection closed or host in correct,  use 'set host' to set ip and port\x1b[0m")
 
         time.sleep(1)
+        self.remove_general_search_filter(self.filter2)
         self.add_general_search_filter(self.filter1)
         self.add_areas(self._city + ", " + self._state)
         
@@ -178,7 +179,7 @@ def ConsoleStartUp():
     while(True):
         print("\n\nEnter the target/host IP: ", end = "")
         IP = input()
-        
+
         print("Enter the target/host PORT: ", end="")
         PORT = input()
 
