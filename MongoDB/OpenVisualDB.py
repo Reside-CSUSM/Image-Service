@@ -634,7 +634,11 @@ class OpenVisualDB():
         
     def disable(self):
         self.disable_flag = True
-        pass
+
+    def enable(self):
+        self.disable_flag = False
+
+        
     def ResideActionChain(self):
         if(self.disable_flag == True):
             return None

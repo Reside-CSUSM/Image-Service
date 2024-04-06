@@ -2,8 +2,10 @@ import sys, os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
+
 from flask import Flask, request
-from AutomationService import AutomationService
+from WebHarvester.DatabaseHandler import OpenVisualDatabaseHandler
+from WebHarvester.AutomationService import AutomationService
 app = Flask(__name__)
 
 
@@ -40,6 +42,7 @@ class ServerResponse():
 
 
 automation_service = AutomationService()
+OpenVisualDBHandler = OpenVisualDatabaseHandler()
 
 @app.route("/")
 def root():
@@ -63,9 +66,11 @@ def PrimaryAutomationEndpoint():
         return str(response)
          
 
-@app.route("/OpenVisualDatabase<Parameter>")
-def OpenVisualDatabase(Parameter):
-    pass
+@app.route("/OpenVisualDatabase")
+def OpenVisualDatabase():
+    OpenVisualDBHandler.handle(request.get_json())
+    response = OpenVisualDBHandler.get_response()
+    return response
 
 
 @app.route("/endpoint", methods=["POST", "GET", "PUT"])
