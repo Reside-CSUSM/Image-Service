@@ -1,4 +1,4 @@
-
+from MongoDB.OpenVisualDB import OpenVisualDB
 
 class Operation():
 
@@ -17,6 +17,7 @@ class OperationUpdate(Operation):
         super().__init__()
     
     def perform(self):
+        
         pass
 
     def response(self):
@@ -58,6 +59,7 @@ class OperationSearch(Operation):
     def response(self):
         pass
 
+
 class OpenVisualDatabaseHandler():
 
     def __init__(self):
@@ -71,11 +73,12 @@ class OpenVisualDatabaseHandler():
             'SEARCH':OperationSearch()
         }
 
-    def __start_operation(self, name):
-        self.operations[name].perform()
+    def __start_operation(self):
+        self.operations[self.operation_value].perform()
 
     def handle(self, operation_value):
         self.operation_value = operation_value
+        self.__start_operation()
     
     def get_response(self):
         return self.operations[self.operation_value].response()
