@@ -176,6 +176,8 @@ class ResideImageryAPI():
     def housing(self):
         return self.specific_search
 
+
+
 """
 api = ResideImageryApi()
 api.area().add_filters("For rent")
@@ -194,3 +196,22 @@ IPAddr = socket.gethostbyname(hostname)
 api.set_host("38.56.138.77", 6666)
 val = api.housing().add_housing("3834 La Rosa Dr, Unit B, San Marcos, CA 92078").send_calls()
 print(val)"""
+
+
+
+"""
+1) Primary API allows any bots to be launched
+2) Seocndary API allows CRUD operations on database by launching bots
+
+Bot should run in two modes 
+    1) Collection Mode. Enables MongoDB controller to send images to database
+    2) Normal Mode.  Enables Bot to run without needing to collect images everytime
+        Bots should have configuration settings that must be parsed in order to run the bot on server.
+
+
+API first should allow to run any bot without collection mode enabled
+API should allow complete CRUD operations on database by server. 
+
+Client can send CRUD requests to put it on database.
+
+"""

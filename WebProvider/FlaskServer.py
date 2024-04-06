@@ -94,6 +94,7 @@ def details():
     """
     return Details
 
+
 @app.route("/ResideLibraryVerbose/Images", methods=["POST", "GET"])
 def ListingImagesEndpointVerbose():
     responses = []
@@ -126,7 +127,7 @@ def ListingImagesEndpointVerbose():
         response.set_error(True)
         response.put_error_log('Data is not json')
         return response.get()
-               
+       
 @app.route("/ResideLibrary/Images", methods=["POST", "GET"])
 def ListingImagesEndpoint():
     if(request.is_json == True):

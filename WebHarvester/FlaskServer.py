@@ -53,7 +53,7 @@ def SecondaryAutomationEndpoint(value):
         if(isinstance(response, str) == False):
             return str(response)    
         return response
-    
+
 @app.route("/Automations", methods=["POST", "GET"])
 def PrimaryAutomationEndpoint():
         if(request.is_json == False):
@@ -62,7 +62,12 @@ def PrimaryAutomationEndpoint():
         response = automation_service.handle2(request.get_json(), 'POST').get_response()
         return str(response)
          
-          
+
+@app.route("/OpenVisualDatabase<Parameter>")
+def OpenVisualDatabase(Parameter):
+    pass
+
+
 @app.route("/endpoint", methods=["POST", "GET", "PUT"])
 def endpoint():
     try:
