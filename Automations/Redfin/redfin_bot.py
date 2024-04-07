@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import copy
 import re
 from MongoDB.OpenVisualDB import OpenVisualDB, STATE_ABBREVIATION, string_filter
-from redfind_errors import *
+from Redfin.redfind_errors import *
 
 
 
