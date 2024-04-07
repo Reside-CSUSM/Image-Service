@@ -5,7 +5,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 print(sys.path[0], "<--this")
 from flask import Flask, request
-from WebProvider.ListingsService import ListingService
+from .ListingsService import ListingService
 app = Flask(__name__)
 
 

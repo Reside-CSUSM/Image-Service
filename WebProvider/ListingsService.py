@@ -80,8 +80,7 @@ class ListingService():
 
         else:
             try:
-                #Something is happening here
-                
+        
                 val = self.open_visual.ResideActionChain().Country("USA").State(state).City(city).Listing(address_line).Search()
                 #val = False
                 if(val == False): return None
