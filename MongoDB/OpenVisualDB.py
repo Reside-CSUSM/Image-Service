@@ -632,6 +632,7 @@ class Country(__CRUD__):
     def State(self, name):
         print("Inside State()")
         if(self.__country_exists() == False):
+            print("- Country don't exist")
             #Important to return None to preserve the action relationship between structured entities. 
             #User shudn't be able to perform operation on child entity unless parent entity exists
             #If state doesn't city can't exist either so why perform operations.
