@@ -3,12 +3,12 @@ import copy
 import json
 import socket
 
+class RemoteServer():
+    endpoint = "http://0.0.0.0:80/OpenVisualDatabase"
 
 class OperationCRUD():
 
     def __init__(self):
-        self.server_endpoint = "http://192.168.1.222:80/OpenVisualDatabase"
-        self.server_endpoint = "https://https://open-visuals.vercel.app/OpenVisualDatabase"
         self.operation_name = "$None"
         self.api_request = {
             'Operation':self.operation_name,
@@ -19,6 +19,12 @@ class OperationCRUD():
             'AdditionalListingData':'$None'
         }
         self.response = None
+
+    def connect_with_link(self, link):
+        self.server_endpoint = link
+    
+    def connect_with_ip(self, IP, PORT):
+        self.server_endpoint = "http://" + str(IP) + ":" + str(PORT) + ""
 
     def __reset_api_request(self):
         self.api_request = {
@@ -60,12 +66,11 @@ class OperationCRUD():
     def Perform(self):
         headers = {'Content-Type': 'application/json'}
         try:
-            response = requests.post(self.server_endpoint, json=self.api_request, headers=headers)
+            response = requests.post(RemoteServer.endpoint, json=self.api_request, headers=headers)
             self.__reset_api_request()
             return response.text
         except Exception as error:
             print("Error:", error)
-            #return response.status_code
             self.__reset_api_request()
             return False
         
@@ -158,29 +163,8 @@ class OpenVisualAPI():
     def CRUD(self):
         return self.database_crud_controller
 
-
-
-open_visual_api = OpenVisualAPI()
-#value = open_visual_api.CRUD().Add().Country("USA").State("California").City("Otay Ranchers").Perform()
-data = {
-    'Images':[]
-}
-value = open_visual_api.CRUD().Update().Country("USA").State("California").City("La Mesa").Perform()
-#value = open_visual_api.CRUD().Add().Country("USA").State("California").City("")
-print(value)
-
-"""
-[IDEA]:  #PURPOSE:
-        #1) Launch individual automations on a remote server with 'save data' mode disabled
-        #2) Configure Automation setting to be parsed onto the server
-
-[UPDATE]#Server will first delete the entire cache for specific area first in mongoDB
-        #Server then will launch bots with 'collection' mode enabled for to add the same area again
-        #Will update country, state or city depending on what's provided
-
-[DELETE]#Requires Country, State and City to be listed
-        #Sends command to server to delete a specific collection in database
-
-[ADD] #Simply sends command to server create a new collection in database
-
-"""
+    def ConnectWithLink(self, link):
+        RemoteServer.endpoint = link
+    
+    def ConnectWithIP(self, IP, PORT):
+        RemoteServer.endpoint = "http://" + str(IP) + ":" + str(PORT) + "/OpenVisualDatabase"

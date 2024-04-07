@@ -3,7 +3,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path + "\\Redfin")
 print(sys.path[0], "<--this")
-from Redfin.redfin_bot import RedfinBot
+from redfin_bot import RedfinBot
 
 
 class RedfinInterface():
