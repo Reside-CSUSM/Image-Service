@@ -87,7 +87,7 @@ class OperationAddHandler(Operation):
      
     def __init__(self):
         super().__init__()
-        self._response = None
+        self._response = "None"
         self.automation_settings = {
             'Area':"None",
             'Filter':'None'
@@ -133,7 +133,7 @@ class OperationDeleteHandler(Operation):
      
     def __init__(self):
         super().__init__()
-        self._response = None
+        self._response = "None"
     
     def perform(self):
         commands = {
@@ -162,7 +162,7 @@ class OperationSearchHandler(Operation):
      
     def __init__(self):
         super().__init__()
-        self._response = None
+        self._response = "None"
     
     def perform(self):
         try: state = STATE_NAMES[self.request_data['State']].GetFullName()
