@@ -1,4 +1,40 @@
 import copy
+
+
+
+class TwoValuePair():
+
+    def __init__(self, abbr, full_name):
+        self.abbreviation = abbr
+        self.full_name = full_name
+    
+    def GetAbbr(self):
+        return self.abbreviation
+
+    def GetFullName(self):
+        return self.full_name
+
+
+
+class SmartMap():
+
+    def __init__(self, map=None):
+        self.original_map = {}
+        self.reversed_map = {}
+        if(map != None):
+            self.original_map = map
+            for item in self.original_map.items():
+                self.reversed_map[item[1]] = item[0]
+    
+    def use_map(self, map):
+        self.original_map = {}
+        for item in self.original_map.items():
+            self.reversed_map[item[1]] = item[0]
+
+    def select_return_value(self, key):
+        pass
+
+
 STATE_ABBREVIATION = {
     'AL':'Alabama',
     'AK':'Alaska',
@@ -58,6 +94,24 @@ STATE_ABBREVIATION = {
     'WY':'Wyoming'
 }
 
+
+STATE_FULL_NAME = {
+ 
+}
+
+for item in STATE_ABBREVIATION.items():
+    STATE_FULL_NAME[item[1]] = item[0]
+
+STATE_NAMES = {
+
+}
+
+for item in STATE_ABBREVIATION.items():
+    STATE_NAMES[item[0]] = TwoValuePair(item[0], item[1])
+
+#Reversing order and adding Pair so that we can get any value regardless of which key it is
+for item in STATE_FULL_NAME.items():
+    STATE_NAMES[item[0]] = TwoValuePair(item[1], item[0])
 
 class Flag():
 

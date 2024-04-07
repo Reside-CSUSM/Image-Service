@@ -252,7 +252,7 @@ class Listing():
             string = copy.copy(self.address)
             values = string.split(", ")
             #What happens if split() doesn't find ', ' ?
-            self.data['Address'] = values[0]
+            self.data['Address'] = string_filter(values[0])
             self.data['City'] = values[1]
             self.data['State'] = values[2]
             self.data['ZipCode'] = values[3]
@@ -265,7 +265,7 @@ class Listing():
                 print("STATE:", self.data['State'])
                 print("CITY:", self.data['City'])
                 print("ZIPCODE", self.data['ZipCode'])
-            
+        
         except Exception as error:
             has_address.set_false()
             if(self.detail_flag.check()):
@@ -842,8 +842,7 @@ class GeneralLocation():
                     #self.jsonified_listings.append((listing.export('json')))
                     print("Collected element: ", element.get_attribute('id'))
                     listing_json = listing.export('json')
-
-                    try:OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Listing(listing_json['Address']).Create(listing_json)
+                    try: OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Listing(listing_json['Address']).Create(listing_json)
                     except Exception as error: pass
 
                 else:print("\x1b[31mCouldn't collect element\x1b[0m", element.get_attribute('id'))

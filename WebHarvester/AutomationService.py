@@ -12,16 +12,6 @@ from Automations.Redfin.interface import *
 from Automations.Redfin.redfind_errors import *
 
 AUTOMATIONS_ERROR_CODES = []
-class AutomationsHandler():
-    def __init__(self):
-        #Handles the automations.json and updates it 
-        pass
-
-
-class AvailableServices():
-    def __init__(self):
-        #Dynamically import modules of new automation folders/systems
-        pass
 
 
 
@@ -232,3 +222,4 @@ class AutomationService():
         return self
     
 #NOTE SPECIFIC SEARCH THROUGH IMAGERY.PY NOT WORKING THROWS AN ERRO, ALSO HAVE TO TEST SPECIFIC SEARCH FUNCTION IF IT PUTS THINGS IN FILE
+

@@ -14,3 +14,11 @@
 
 #issue fixed bot now launches only two times for single area on update, it was adding mamy areas causing bots to launch many times
 #still it has extra for
+
+
+#Fix address parsing issue in database. Modify string filter or not use it because sometimes it parses out important symbpols like # in some addresses
+
+
+$Fix City, State resolution problem cuz otherwise bots are not going to launch.
+
+#

@@ -66,11 +66,11 @@ def PrimaryAutomationEndpoint():
         return str(response)
          
 
-@app.route("/OpenVisualDatabase")
+@app.route("/OpenVisualDatabase", methods=["POST", "GET"])
 def OpenVisualDatabase():
     OpenVisualDBHandler.handle(request.get_json())
     response = OpenVisualDBHandler.get_response()
-    return response
+    return str(response)
 
 
 @app.route("/endpoint", methods=["POST", "GET", "PUT"])

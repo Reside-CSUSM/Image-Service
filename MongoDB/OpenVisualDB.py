@@ -6,7 +6,7 @@ sys.path.insert(0, sys.path[0] + "\\MongoDB")
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from MongoDB.GeoMapper import CountryResolver
-from MongoDB.utility import string_filter, STATE_ABBREVIATION, Flag
+from MongoDB.utility import string_filter, STATE_ABBREVIATION, Flag, STATE_FULL_NAME, STATE_NAMES
 import copy
 
 
@@ -14,9 +14,6 @@ TEMPLATE = {
     "_id":"country_name",
     "_abbreviation":"",
     "_states":{
-        "California":{
-
-        }
     }
 }
 
@@ -40,6 +37,62 @@ class __CRUD__():
     def Fetch(self):
         pass
 
+class _Generic():
+
+    def __init__(self):
+        pass
+
+    def Create(self):
+        print("Parent doesn't exist to perform child.Create()")
+        return False
+    
+    def Upate(self):
+        print("Paren't doesn't exist to perform child.Update()")
+        return False
+
+    def Search(self):
+        print("Parent doesn't exist to child.search()")
+        return False
+    
+    def Delete(self):
+        print("Parent doesn't exist to child.delete()")
+        return False
+    
+class _Listing(_Generic):
+
+    def __init__(self):
+        super().__init__()
+
+
+class _City(_Generic):
+
+    def __init__(self):
+        super().__init__()
+        self.listing = _Listing()
+    
+    def Listing(self, name):
+        return self.listing
+
+
+class _State(_Generic):
+
+    def __init__(self):
+        super().__init__()
+        self.city = _City()
+
+    def City(self, name):
+        return self.city
+
+
+class _Country(_Generic):
+
+    def __init__(self):
+        super().__init__()
+        self.state = _State()
+    
+    def State(self, name):
+        return self.state
+    
 
 class Listing(__CRUD__):
 
@@ -125,7 +178,7 @@ class Listing(__CRUD__):
         print("Deleted", self._current_listing, end="")
         if(self.__listing_exists() == False):
             print("...Doesn't exist to Delete")
-            return True
+            return False
         
         collection = self.database[self._current_country + "/" + self._current_state + "/" + self._current_city]
         value = collection.find_one_and_delete({"Address":self._current_listing})
@@ -279,7 +332,8 @@ class City(__CRUD__):
 
     def Listing(self, name):
         if(self.__city_exists() == False):
-            return None
+            return _Listing()
+            #return None
         
         data = {
             'country':self._current_country,
@@ -431,8 +485,8 @@ class State(__CRUD__):
     
     def City(self, name):
         if(self.__state_exists() == False):
-            return None
-        
+            #return None
+            return _City()
         data = {
             'country':self._current_country,
             'state':self._current_state,
@@ -575,7 +629,13 @@ class Country(__CRUD__):
 
     def State(self, name):
         if(self.__country_exists() == False):
-            return None
+            #Important to return None to preserve the action relationship between structured entities. 
+            #User shudn't be able to perform operation on child entity unless parent entity exists
+            #If state doesn't city can't exist either so why perform operations.
+            #The reason being is child shouldn't have to worry about if parent exists or not when processing infor
+            #This reduces code and ensures that child entities don't have to keep a check on parents to know if parent's attributes/instance itself exists in database
+            #return None
+            return _State()
         
         data = {
             'country':self._current_country,
@@ -584,6 +644,11 @@ class Country(__CRUD__):
         self.state.recieve_meta_data(data)
         return self.state
 
+
+#Shouldn't need to use this technique
+#SOLUTION: In order to prevent child keeping check on parents, parents can let child know by setting a flag.
+#then those child can let their child know by setting the flag. At most mongoDB would return None if database[Country][State][City] Didn't exist
+#also same thing for collection right now just do _Generic but fix this issue as soon as possible
 
 class ActionChainRoot():
 
@@ -637,7 +702,6 @@ class OpenVisualDB():
 
     def enable(self):
         self.disable_flag = False
-
         
     def ResideActionChain(self):
         if(self.disable_flag == True):
