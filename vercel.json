@@ -12,9 +12,12 @@
     ],
 
     "routes":[
+
+        
+
         {
-            "src":"/(.*)",
-            "dest":"/provider.py",
+            "src":"/OpenVisualDatabase",
+            "dest":"/harvester.py",
             "methods":["GET", "POST", "PUT"],
             "headers":{
                 "Access-Control-Allow-Origin": "*",
@@ -22,10 +25,9 @@
             }
 
         },
-
         {
-            "src":"/OpenVisualDatabase",
-            "dest":"/harvester.py",
+            "src":"/(.*)",
+            "dest":"/provider.py",
             "methods":["GET", "POST", "PUT"],
             "headers":{
                 "Access-Control-Allow-Origin": "*",
