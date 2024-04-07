@@ -69,8 +69,8 @@ class ListingService():
             state_abbreviation  = state_abbreviation.replace(" ", "")
 
         try:
-            state = STATE_ABBREVIATION[state_abbreviation]
-            #state = STATE_NAMES[state].GetAbbr()
+            #state = STATE_ABBREVIATION[state_abbreviation]
+            state = STATE_NAMES[state_abbreviation].GetFullName()
             print("State Abbr   = (" + state_abbreviation, "     len = " + str(len(state_abbreviation)))
             print("State        = (" + state, "     len = " + str(len(state)))
             print("City         = (" + city, "     len = " + str(len(city)))
