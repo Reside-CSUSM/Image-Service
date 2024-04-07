@@ -79,8 +79,8 @@ class ListingService():
 
         else:
             try:
-                #val = self.open_visual.ResideActionChain().Country("USA").State(state).City(city).Listing(address_line).Search()
-                val = False
+                val = self.open_visual.ResideActionChain().Country("USA").State(state).City(city).Listing(address_line).Search()
+                #val = False
                 if(val == False): return None
                 self.response = {
                     'ListingIdentifier':address,
