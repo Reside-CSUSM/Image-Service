@@ -2,29 +2,12 @@
     "version":2,
     "builds":[
         {
-            "src":"./provider.py",
-            "use":"@vercel/python"
-        },
-        {
             "src":"./harvester.py",
             "use":"@vercel/python"
         }
     ],
 
     "routes":[
-
-        
-
-        {
-            "src":"/OpenVisualDatabase",
-            "dest":"/harvester.py",
-            "methods":["GET", "POST", "PUT"],
-            "headers":{
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST"
-            }
-
-        },
         {
             "src":"/(.*)",
             "dest":"/provider.py",
@@ -34,19 +17,7 @@
                 "Access-Control-Allow-Methods": "POST"
             }
 
-        },
-
-        {
-            "src":"/Automations",
-            "dest":"/harvester.py",
-            "methods":["GET", "POST", "PUT"],
-            "headers":{
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST"
-            }
-
         }
-        
     ]
       
 }
