@@ -331,7 +331,7 @@ class City(__CRUD__):
         print("...Updated")
 
     def Listing(self, name):
-        print("Inside Listing()")
+       
         if(self.__city_exists() == False):
             return _Listing()
             #return None
@@ -485,7 +485,7 @@ class State(__CRUD__):
         return False
     
     def City(self, name):
-        print("Inside City")
+       
         if(self.__state_exists() == False):
             #return None
             return _City()
@@ -630,9 +630,7 @@ class Country(__CRUD__):
             return True
 
     def State(self, name):
-        print("Inside State()")
         if(self.__country_exists() == False):
-            print("- Country don't exist")
             #Important to return None to preserve the action relationship between structured entities. 
             #User shudn't be able to perform operation on child entity unless parent entity exists
             #If state doesn't city can't exist either so why perform operations.
