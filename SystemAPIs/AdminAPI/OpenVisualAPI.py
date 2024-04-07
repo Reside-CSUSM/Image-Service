@@ -7,8 +7,8 @@ import socket
 class OperationCRUD():
 
     def __init__(self):
-        self.server_endpoint = "https://vercel-open-visuals-app/OpenVisualDatabase"
         self.server_endpoint = "http://192.168.1.222:80/OpenVisualDatabase"
+        self.server_endpoint = "https://https://open-visuals.vercel.app/OpenVisualDatabase"
         self.operation_name = "$None"
         self.api_request = {
             'Operation':self.operation_name,
