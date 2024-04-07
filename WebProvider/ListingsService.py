@@ -3,7 +3,7 @@ sys.path.insert(0, r'C:\Users\yasha\Visual Studio Workspaces\OpenVisuals\OpenVis
 dir_path = os.path.dirname(os.path.realpath(__file__))
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
-from MongoDB.OpenVisualDB import OpenVisualDB, string_filter, STATE_ABBREVIATION
+from MongoDB.OpenVisualDB import OpenVisualDB, string_filter, STATE_ABBREVIATION, STATE_NAMES
 import copy
 
 class ListingService():
@@ -70,6 +70,7 @@ class ListingService():
 
         try:
             state = STATE_ABBREVIATION[state_abbreviation]
+            #state = STATE_NAMES[state].GetAbbr()
             print("State Abbr   = (" + state_abbreviation, "     len = " + str(len(state_abbreviation)))
             print("State        = (" + state, "     len = " + str(len(state)))
             print("City         = (" + city, "     len = " + str(len(city)))
@@ -80,6 +81,7 @@ class ListingService():
         else:
             try:
                 #Something is happening here
+                
                 val = self.open_visual.ResideActionChain().Country("USA").State(state).City(city).Listing(address_line).Search()
                 #val = False
                 if(val == False): return None

@@ -645,6 +645,7 @@ class Country(__CRUD__):
             'country':self._current_country,
             'state':name
         }
+        print("End of state")
         self.state.recieve_meta_data(data)
         return self.state
 
@@ -674,7 +675,7 @@ class ActionChainRoot():
         return new_list
     
     def Country(self, name):
-        print("Inside Countr()")
+        print("Inside Country()")
         data = {
             'country':name
         }
