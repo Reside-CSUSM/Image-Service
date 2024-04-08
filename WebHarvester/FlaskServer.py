@@ -43,7 +43,6 @@ class ServerResponse():
 
 automation_service = AutomationService()
 OpenVisualDBHandler = OpenVisualDatabaseHandler()
-
 @app.route("/")
 def root():
     return "cloud server is running"
