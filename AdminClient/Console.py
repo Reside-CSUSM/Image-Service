@@ -79,6 +79,9 @@ def console():
             if(port == "exit"):
                 continue
             OpenVisualAPI.ConnectWithIP(ip, port)
+        
+        
+        
             
 
       

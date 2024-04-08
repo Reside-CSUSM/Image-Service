@@ -16,25 +16,6 @@ class TwoValuePair():
 
 
 
-class SmartMap():
-
-    def __init__(self, map=None):
-        self.original_map = {}
-        self.reversed_map = {}
-        if(map != None):
-            self.original_map = map
-            for item in self.original_map.items():
-                self.reversed_map[item[1]] = item[0]
-    
-    def use_map(self, map):
-        self.original_map = {}
-        for item in self.original_map.items():
-            self.reversed_map[item[1]] = item[0]
-
-    def select_return_value(self, key):
-        pass
-
-
 STATE_ABBREVIATION = {
     'AL':'Alabama',
     'AK':'Alaska',

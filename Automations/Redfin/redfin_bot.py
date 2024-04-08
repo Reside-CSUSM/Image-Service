@@ -15,7 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import copy
 import re
-from MongoDB.OpenVisualDB import OpenVisualDB, STATE_ABBREVIATION, string_filter
+from MongoDB.OpenVisualDB import OpenVisualDB, STATE_ABBREVIATION
 from Redfin.redfind_errors import *
 
 
@@ -30,6 +30,59 @@ REDFIN_ERROR_CODES = [LOGIN_ERROR_CODE, SEARCHING_ERROR_CODE, DATA_FETCHING_ERRO
 
 CURRENT_SESSION_ADDRESS = ""
 OpenVisual_DB = OpenVisualDB()
+
+
+def string_filter(name_org):
+        
+        print("\x1b[31mstring_filter()->Recieved String:\x1b[0m "+ name_org)
+        name = copy.copy(name_org)
+        unwanted_characters = ["|", "*", "&", "^", "%", "$", "@", "!", "[", "]", "{", "}", ";", ">", "<", "?", "/", "'", "~", "+", "."]
+        for character in unwanted_characters:
+            if(character in name):
+                print("Replaced Unwanted Charcter:", character)
+                name = name.replace(character, " ")
+                    
+
+        #Try to look for white spaces on the ends
+        rindex = name.rfind(" ")
+        lindex = name.find(" ")
+
+        #Find where do text characters appear
+        global Ralphaindex, Lalphaindex
+        if(lindex != -1):
+            for i in range(0, len(name)):
+                if((name[i] >= "A" and name[i] <= "z") or (name[i] >= "1" and name[i] <= "9")):
+                    Lalphaindex = i
+                    print("Alphabet found from Left at:", Lalphaindex)
+                    break
+            
+
+            for i in range(len(name)-1, 0, -1):
+                print("ralpa index itr:", i)
+                if((name[i] >= "A" and name[i] <= "z") or (name[i] >= "1" and name[i] <= "9")):
+                    Ralphaindex = i
+                    print("Alphabet found from Right at:", Ralphaindex)
+                    break
+                
+            #Ralpa > rindex   (should be ideally)   if opposite then there's a white space between 0th index and nth text chharcter
+            #Lalpha < lindex   (should be ideally)  if opposite then there's a white space between last index and nth text chharcter
+
+            Rspace = (Ralphaindex < rindex)
+            Lspace = (Lalphaindex > lindex)
+
+            if(Rspace == True):
+                print("(" + name + ") There's white space in the back, BAD FORMAT WARNING")
+                name = name[0:Ralphaindex+1]
+                print("After popping the right space (" + name + ")")
+
+            if(Lspace == True):
+                print("(" + name + ") There's a white space infront, BAD FORMAT WARNING")
+                name = name[Lalphaindex:]
+                print("After popping the left space (" + name + ")")
+                print("Final content of Name (" + name + ")")
+
+        print("\x1b[31m_________end of filter_____\x1b[0m\n\n")
+        return name
 #In future, elements references can be chained kind of like action chains
 class Response():
 

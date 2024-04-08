@@ -700,16 +700,6 @@ class OpenVisualDB():
         self.database = self.mongo_client["OpenVisualDB"]
         self.action_chain_root = ActionChainRoot(self.database)
         self.disable_flag = False
-
-        # Send a ping to confirm a successful connection
-        """ try:
-            self.mongo_client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
-        except Exception as e:
-            print("URGENT: Database is not connected from the platform hosted")
-            print("Likely that IP address is not added to mongoDB cluster to accept")
-            print(e)"""
-    
         
     def disable(self):
         self.disable_flag = True
