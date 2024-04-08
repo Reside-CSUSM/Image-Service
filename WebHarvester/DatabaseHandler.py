@@ -96,6 +96,9 @@ class OperationAddHandler(Operation):
     def perform(self):
         try: state = STATE_NAMES[self.request_data['State']].GetFullName()
         except: state = self.request_data['State']
+
+        response = False
+        #Shouldn't launch bots if city is already there
         if(self.request_data['Country'] != '$None'):
             self._response = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).Create()
         
@@ -103,8 +106,9 @@ class OperationAddHandler(Operation):
                 self._response = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).Create()
                 
                 if(self.request_data['City'] != '$None'):
+                    response = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City']).Search()
                     self._response = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City']).Create()
-
+                    
                     if(self.request_data['Listing'] != '$None'):
                         if(self.request_data['AdditionalListingData'] != '$None'):
                             self._response = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City']).Listing(self.request_data['Listing']).Create(self.request_data['AdditionalListingData'])
@@ -113,6 +117,7 @@ class OperationAddHandler(Operation):
 
 
         #Invoke Automation Handler To add new cities
+        if(response == True): return
         if(self.request_data['State'] != '$None' and self.request_data['City'] != '$None' and self.request_data['Listing'] == '$None'):
             try: state_abbr = STATE_NAMES[self.request_data['State']].GetAbbr()
             except: state_abbr = self.request_data['State']

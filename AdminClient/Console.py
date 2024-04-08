@@ -17,7 +17,7 @@ def console():
     
     while(True):
         os.system('cls')
-        print("Select Options: [add area, set host,  exit,  delete, update area, start updates]")
+        print("Select Options: [add area, set host,  exit,  delete area, update area, start updates]")
         val = input()
 
         if(val == "exit"):
@@ -36,7 +36,12 @@ def console():
             if(city == "exit"):break
             elif(city == "none"):continue
 
-            OpenVisualAPI.CRUD().Update().Country("USA").State(state).City(city).Perform()    
+            print("\x1b[31mupdating\x1b[0m....")
+            value = OpenVisualAPI.CRUD().Update().Country("USA").State(state).City(city).Perform()    
+            print("Report Status: ", value)
+
+            input()
+
 
         elif(val == "add area"):
             print("\n/ADD  AREA> ", end="")
@@ -51,7 +56,11 @@ def console():
             if(city == "exit"):break
             elif(city == "none"):continue
 
-            OpenVisualAPI.CRUD().Add().Country("USA").State(state).City(city).Perform()  
+            print("\x1b[31mAdding\x1b[0m....")
+            value = OpenVisualAPI.CRUD().Add().Country("USA").State(state).City(city).Perform()  
+            print("Report Status: ", value)
+
+            input()
         
         elif(val == "delete area"):
             print("\n/ADD  AREA> ", end="")
@@ -65,8 +74,12 @@ def console():
             city = input()
             if(city == "exit"):break
             elif(city == "none"):continue
+            
+            print("\x1b[31mDeleting\x1b[0m....")
+            value = OpenVisualAPI.CRUD().Delete().Country("USA").State(state).City(city).Perform() 
+            print("Report Status: ", value) 
 
-            OpenVisualAPI.CRUD().Delete().Country("USA").State(state).City(city).Perform()  
+            input()
 
         elif(val == "set host"):
             print("\n\n/set host> ", end="")
@@ -94,9 +107,15 @@ def ConsoleStartUp():
     while(True):
         print("\n\nEnter the target/host IP: ", end = "")
         IP = input()
+        if(IP == "exit"):
+            return
+        
 
         print("Enter the target/host PORT: ", end="")
         PORT = input()
+
+        if(PORT == "exit"):
+            return
 
         print("\n\n")
         print("\x1b[34mYour Server IP\x1b[0m: " + IP)
