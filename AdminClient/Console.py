@@ -17,6 +17,8 @@ def console():
     
     while(True):
         os.system('cls')
+        print("\x1b[31mNOTICE: Please type in correct city names otherwise redfin site search goes haywire")
+        print("It then causes wrong addresses to be stored under wrong city in database\x1b[0m")
         print("Select Options: [add area, set host,  exit,  delete area, update area, start updates]")
         val = input()
 
