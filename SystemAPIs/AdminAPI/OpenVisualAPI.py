@@ -2,6 +2,8 @@ import requests
 import copy
 import json
 import socket
+import sys
+sys.path.insert(0, r"C:\Users\kulsh001\AppData\Local\Programs\Python\Python311\Lib\site-packages")
 
 class RemoteServer():
     endpoint = "http://0.0.0.0:80/OpenVisualDatabase"

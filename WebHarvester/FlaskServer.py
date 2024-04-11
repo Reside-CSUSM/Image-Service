@@ -40,9 +40,9 @@ class ServerResponse():
         self.payload['ErrorLog'].append(log)
 
 
-
 automation_service = AutomationService()
 OpenVisualDBHandler = OpenVisualDatabaseHandler()
+
 @app.route("/")
 def root():
     return "cloud server is running"

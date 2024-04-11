@@ -39,7 +39,9 @@ def console():
             elif(city == "none"):continue
 
             print("\x1b[31mupdating\x1b[0m....")
-            value = OpenVisualAPI.CRUD().Update().Country("USA").State(state).City(city).Perform()    
+            
+            value = OpenVisualAPI.CRUD().Update().Country("USA").State(state).City(city).Perform()   
+
             print("Report Status: ", value)
 
             input()
@@ -68,7 +70,7 @@ def console():
             print("\n/ADD  AREA> ", end="")
             print("Enter the name of (State) ", end="")
             state = input()
-                
+            
             if(state == "exit"):break
             elif(state == "none"):continue
 
@@ -99,9 +101,6 @@ def console():
         
             
 
-      
-
-       
     print("\n\n Program exited....")
 
 
