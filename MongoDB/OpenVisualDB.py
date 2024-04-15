@@ -37,6 +37,7 @@ class __CRUD__():
     def Fetch(self):
         pass
 
+#FAKE ROOT CLASS
 class _Generic():
 
     def __init__(self):
@@ -57,13 +58,14 @@ class _Generic():
     def Delete(self):
         print("Parent doesn't exist to child.delete()")
         return False
-    
+
+#FAKE CLASS:
 class _Listing(_Generic):
 
     def __init__(self):
         super().__init__()
 
-
+#FAKE CLASS:
 class _City(_Generic):
 
     def __init__(self):
@@ -73,7 +75,7 @@ class _City(_Generic):
     def Listing(self, name):
         return self.listing
 
-
+#FAKE STATE
 class _State(_Generic):
 
     def __init__(self):
@@ -83,7 +85,7 @@ class _State(_Generic):
     def City(self, name):
         return self.city
 
-
+#FAKE CLASS
 class _Country(_Generic):
 
     def __init__(self):
@@ -94,6 +96,16 @@ class _Country(_Generic):
         return self.state
     
 
+#FAKE CLASSES (LAZY PATCH):
+#Description: Fake classes are created to prevent chains from breaking if error is thrown
+#Example: OpenVisualDB.CRUD().Country("USA").State("CA").City("San Diego").Update()
+#Here if any of these things (country, states, cities and listings) throw error because parent doesn't exist
+#the chain would break causing managment issues when chains are used as commands. 
+#So fake classes are returned are used instead of thrown error 'None' so since parent doesn't exist/invalid
+#then all the actions of childs become invalid also because exact same functions are empty in fake classes
+
+# (NOT A GOOD SOLUTION): It's possibly to detect parent-child relationship validity without stupid fake class solution
+#NOTE: Needed to work on many more backlogged features and this kinda got left out
 class Listing(__CRUD__):
 
     def __init__(self, database):
@@ -141,10 +153,14 @@ class Listing(__CRUD__):
             print("...Already exists")
             return True
         
+        #If listing doesn't exist then create the collection
         if(self.__collection_exists() == False):
             self.database.create_collection(self._current_country + "/" + self._current_state + "/" + self._current_city)
         
+        #Fetch the collection from the database now
         collection = self.database[self._current_country + "/" + self._current_state + "/" + self._current_city]
+       
+       #If data is not given for the current listing then just create a basic template
         if(data == None):
             template = {
                 'Address':"",
@@ -162,6 +178,7 @@ class Listing(__CRUD__):
                 print("...Created")
                 return True
 
+        #Otherwise set the key values to given current values of city, state and country
         else:
             data['Address'] = self._current_listing
             data['City'] = self._current_city
@@ -180,7 +197,9 @@ class Listing(__CRUD__):
             print("...Doesn't exist to Delete")
             return False
         
+        #Get the collection
         collection = self.database[self._current_country + "/" + self._current_state + "/" + self._current_city]
+        #Delete the collection
         value = collection.find_one_and_delete({"Address":self._current_listing})
         if(value == None):
             print("...\x1b[31mCouldn't delete (error)/x1b[0m")
@@ -210,12 +229,16 @@ class Listing(__CRUD__):
             print("...Doesn't exist to update")
             return False
         
+        #Get collection
         collection = self.database[self._current_country + "/" + self._current_state + "/" + self._current_city]
+        #Get listing from the collection 
         listing = collection.find_one({"Address":self._current_listing})
 
+        #create the same keys in listing as well and assign them second value
         for item in data.items():
             listing[item[0]] = item[1]
 
+        #Update the givend data
         value = collection.find_one_and_update({"Address":self._current_listing}, {"$set":listing})
         if(value == None):
             print("...Couldn't Update(error)")
@@ -239,6 +262,7 @@ class City(__CRUD__):
         self._current_state = None
         self._current_state = None
     
+    #Checks if city exists
     def __city_exists(self):
         try:
             value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
@@ -291,6 +315,7 @@ class City(__CRUD__):
             print("...Doesn't exist to delete")
             return False
         
+        #Find the state from @MetaData then from state get the city and then update it with 'value'
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         states = value["_states"]
         states[self._current_state].pop(self._current_city)
@@ -319,14 +344,17 @@ class City(__CRUD__):
             print("...Doesn't exist to Update")
             return False
         
+        #Get the state and then the city 
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         states = value["_states"]
         state = states[self._current_state]
         listings = state[self._current_city]
 
+        #Create same keys as in city_data with the value of item assigned in listing for those keys
         for item in city_data.items():
             listings[item[0]] = item[1]
 
+        #Update the data here
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, value)
         print("...Updated")
 
@@ -390,15 +418,18 @@ class State(__CRUD__):
         return self._current_state
     
     def Create(self, date=None):
-        #CHECK
+        #CHECK if the state already exists
         print("Creating", self._current_state, end="")
         if(self.__state_exists() == True):
             print("...Already exists")
             return True
         
+        #Find the country and then find the state
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         state = value["_states"]
         state[self._current_state] = {}
+
+        #Update the country->state chain now using latest value
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
         print("...Created")
         return True
@@ -414,11 +445,13 @@ class State(__CRUD__):
         #Get all city object and delete them
         to_be_deleted = self.GetAllCities()
         
+        #Invoke city object and use it to delete collections which represent areas
         for city in to_be_deleted:
             data = {'city':city, 'country':self._current_country, 'state':self._current_state}
             self.city.recieve_meta_data(data)
             self.city.SelectCity(city).Delete()
 
+        #Then find current country then state from metadata file and delete that entry as well
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         value["_states"].pop(self._current_state)
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
@@ -462,14 +495,16 @@ class State(__CRUD__):
             print("...Doesn't exist to update")
             return False
         
-
+        #Find state and then city
         value = dict(self.meta_data_collection.find_one({"_id":self._current_country}))
         states = value["_states"]
         cities = states[self._current_state]
         
+        #Create or atleast use same keys in cities as given in state_data then assign back the values
         for item in state_data.items():
             cities[item[0]] = item[1]
         
+        #Update the entries in metadata as well
         self.meta_data_collection.find_one_and_update({"_id":self._current_country}, {"$set":value})
         print("...Updated")
         return True
@@ -501,6 +536,7 @@ class State(__CRUD__):
 class Country(__CRUD__):
 
     def __init__(self, database):
+        #Initialize, database, metadata collection, state object for chaining 
         super().__init__()
         self.database = database
         self.meta_data_collection = self.database["@MetaData"]
@@ -529,13 +565,19 @@ class Country(__CRUD__):
             print("....Country Already Exists")
             return True
 
+        #create a copy of template
         template = copy.copy(TEMPLATE)
+        #set the id to the name
         template["_id"] = self._current_country
+
         try:
+            #Convert the full name of country to it's abbreviation
             template["_abbreviation"] = CountryResolver.ResolveToAbbr(self._current_country)
         except Exception as error:
             template["_abbreviation"] = self._current_country
 
+        #create a new template for the new country within metadata collection which stores templates
+        #for every country
         value = self.meta_data_collection.insert_one(template)
         if(value == None):
             print(".../x1b[31mCouldn't Create (error)/x1b[0m")

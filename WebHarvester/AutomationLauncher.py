@@ -22,10 +22,12 @@ class RedfinLauncher():
         }
 
     def save_settings(self, data):
+        #save settings 
         self.data['Area'] = data['Area']
         self.data['Filter'] = data['Filter']
 
     def launch(self):
+        #ALL these steps need need to happen in order run the bot
         RedfinInterface.create_bot()
         RedfinInterface.activate()
         RedfinInterface.type("general")
@@ -45,16 +47,19 @@ class AutomationLauncher():
         }
     
     def handover_settings(self, data):
+        #handover the recieved settings from client to the bot launcher
         if(self.current_automation == None): return
         self.available_automations[self.current_automation].save_settings(data)
     
     def select_automation(self, name):
+        #slect the which automation to run
         try:
             self.current_automation = name
         except Exception as error:
             self.current_automation = None
 
     def launch(self):
+        #launch the automation
         if(self.current_automation == None): return
         self.response = self.available_automations[self.current_automation].launch()
         

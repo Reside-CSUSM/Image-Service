@@ -145,6 +145,8 @@ class ElementReference():
     def value(self):
         return self.tag_value
 
+
+#Directly searches the element and returns it using 'by'
 class ElementPointer():
     def __init__(self, tag, value, bot):
         self.bot = bot
@@ -152,6 +154,8 @@ class ElementPointer():
         self.tag_value = value
         self._element = None
         self.flag = Flag()
+
+    #Creates a pointer kina like a virtual pointer to the element
 
     def create_pointer(self):
         try:
@@ -161,9 +165,11 @@ class ElementPointer():
             self.flag.set_false()
             print("ElementPointer Error: ", error)
     
+    #Get status of the pointer
     def get_status(self):
         return self.flag.check()
     
+    #Set the reference to whatever u want element to point to 
     def set_reference(self, tag, value):
         self.tag=tag
         self.tag_value = value
@@ -174,7 +180,7 @@ class ElementPointer():
             print("ElementPointer Error:", error)
             self._element = None
 
-
+    #get the element
     def element(self):
         return self._element
     
@@ -250,6 +256,8 @@ class Listing():
         has_stats = Flag()
         has_stats.set_true()
         images = ""
+
+        #Use the image class name to find images
         try:
             image_class_name = 'bp-Carousel__cell'
             images = self.element_ptr.find_elements(By.CLASS_NAME, image_class_name)
@@ -259,11 +267,13 @@ class Listing():
                 self.processed_flag.set_false()
             return False
 
+        #Show if printing is enabled
         if(self.print_flag.check()):
             print("\n\n\x1b[32mLISTING INFO:\x1b[0m")
             print("Getting images....")
 
         global image_url
+        #Parse out all the images and append it to self.data
         for image in images:
             try:
                 image_url = image.find_element(By.CLASS_NAME, 'bp-Homecard__Photo--image').get_attribute('src')
@@ -276,12 +286,14 @@ class Listing():
                 #print(error)
 
         try: 
+            #Parse out the address as well
             address_el = self.element_ptr.find_element(By.CLASS_NAME, 'bp-Homecard__Content')
             string = copy.copy(address_el.text)
             string = string.split("\n")
             #self.address = string[-1]
             self.stats = []
             
+            #Process the string to remove terminating chars
             for str in string:
                 str.replace("\n", "")
                 self.stats.append(str)
@@ -300,8 +312,8 @@ class Listing():
                         else:
                             self.address += matches.group(i)+", "
                     break
-            
-            """#EXTRACTING STATE, CITY, AND ZIP FROM THE ADDRESS"""
+        
+            #EXTRACTING STATE, CITY, AND ZIP FROM THE ADDRESS
             string = copy.copy(self.address)
             values = string.split(", ")
             #What happens if split() doesn't find ', ' ?
@@ -311,6 +323,7 @@ class Listing():
             self.data['ZipCode'] = values[3]
             print("VALUES:== ", values)
 
+            #Print if printing is enabled
             if(self.detail_flag.check()):
                 print("ADDRESS:", self.data['Address'])
                 print("STATS:", self.data['Stats'])
@@ -352,6 +365,7 @@ class ListingPageBar():
         self.previous_button = ElementPointer(By.XPATH, '//*[@id="results-display"]/div[5]/div/div[3]/button[1]', self.bot)
     
     def create_pointer(self):
+        #Initialize pointers to both next and previous bttonbs
         self.next_button.create_pointer()
         self.previous_button.create_pointer()
     
@@ -362,6 +376,7 @@ class ListingPageBar():
         return self.current_page
     
     def next(self):
+        #Navigate to the next page by clicking on the next button
         try:
             self.current_page += 1
             self.next_button.element().click()
@@ -372,6 +387,7 @@ class ListingPageBar():
            
     
     def previous(self):
+        #Navigate to the previous page by clicking on the previous button
         try:
             self.current_page -= 1
             self.previous_button.element().click()
@@ -403,6 +419,7 @@ class HouseType():
 
 class BedsAndBath():
     def __init__(self, bot):
+        #Create pointers and use bot object
         self.bot = bot
         self.bed_bath_button = ElementPointer(By.XPATH, '', self.bot)
         self._click_done_button = ElementPointer(By.CLASS_NAME, "", self.bot)
@@ -450,6 +467,8 @@ class HomeType():
         #class_name for main_button = bp-ItemPicker PropertyTypes__items
         self.main_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div', self.bot)
         self.done_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div/div[2]/div/div[2]/button', self.bot)
+        
+        #Options for choosing what type of home do we wanna select
         self.options = {
             'house':ElementPointer(By.CLASS_NAME, '//*[@id="sidepane-header"]/div/div/div[1]/form/div[3]/div/div[2]/div/div[1]/div[2]/div/div[1]', self.bot),
             'town_house':ElementPointer(By.CLASS_NAME, '//*[@id="sidepane-header"]/div/div/div[1]/form/div[3]/div/div[2]/div/div[1]/div[2]/div/div[2]', self.bot),
@@ -460,11 +479,13 @@ class HomeType():
             'co_op':ElementPointer(By.CLASS_NAME, '//*[@id="sidepane-header"]/div/div/div[1]/form/div[3]/div/div[2]/div/div[1]/div[2]/div/div[7]', self.bot),
             'other':ElementPointer(By.CLASS_NAME, '//*[@id="sidepane-header"]/div/div/div[1]/form/div[3]/div/div[2]/div/div[1]/div[2]/div/div[8]', self.bot)
         }
+
         self.settings = {
             'Home Type':"None"
         }
-                                                   
+                                          
     def click_home_button(self):
+        #Clicks on the main button which shows all the option
         try:
             self.main_button.create_pointer()
             self.main_button.element().click()
@@ -474,6 +495,7 @@ class HomeType():
         return self
     
     def choose_home_type(self, type):
+        #Click on the option whichever you selected after clicking on main buttinb
         try:
             self.options[type].create_pointer()
             self.options[type].element().click()
@@ -483,6 +505,7 @@ class HomeType():
         return self
     
     def click_done(self):
+        #Click done after you're done selecting the option
         try:
             self.done_button.create_pointer()
             self.done_button.element().click()
@@ -499,7 +522,7 @@ class HomeType():
 class PaymentType():
 
     def __init__(self, bot):
-
+        #THIS CLASS points to the button that gives you option for 'For rent' and for sale
         self.bot = bot
         self.bot_flag = Flag()                              
         self.main_payment_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[1]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[1]/div', self.bot)
@@ -516,6 +539,7 @@ class PaymentType():
     
 
     def click_payment_type_button(self):
+        #Click in the payment button option to select wither for rent or for sake
         try:
             print("\x1b[33mTrying to click on on Main Payment Type Button\x1b[0m")
             self.main_payment_button.create_pointer()
@@ -529,6 +553,7 @@ class PaymentType():
         return self
     
     def click_for_rent_button(self):
+        #Select for rent button firsst create pointer to that element 
         try:
             print("\x1b[33mTrying to Click on For Rent Type Button\x1b[0m")
             self.for_rent.create_pointer()
@@ -541,6 +566,7 @@ class PaymentType():
         return self
     
     def click_for_sale_button(self):
+        #Create pointer to the element on browser and click on for sale
         try:
             print("\x1b[33mTrying to click on For Sale Type Button\x1b[0m")
             self.for_sale.create_pointer()
@@ -553,6 +579,7 @@ class PaymentType():
         return self
 
     def click_done(self):
+        #After done selecting home catogry create pointer to done button say 'done' 
         try:
             print("\x1b[33mTrying to click on Done  Button\x1b[0m")
             self.done_button.create_pointer()
@@ -589,6 +616,7 @@ class PriceRange():
         if(bot == None):self.bot_flag.set_false()
 
         else:
+            #Main price button
             self.main_price_button = ElementPointer(By.XPATH, '/html/body/div[1]/div[8]/div[2]/div[1]/div[2]/div/div/div/div[1]/form/div[2]/div', self.bot)
             self.enter_min_field = ElementPointer(By.CSS_SELECTOR, "input[placeholder='Enter min']", self.bot)
             self.enter_max_field = ElementPointer(By.CSS_SELECTOR, "input[placeholder='Enter max']", self.bot)
@@ -596,8 +624,12 @@ class PriceRange():
             self.bot_flag.set_true()
 
     def click_price_button(self):
+        #Click on the main price button
+
+        #If bot is not given the return false
         if(self.bot_flag.check() == False):return
         try:
+            #create poiinter to the element in browser and click
             self.main_price_button.create_pointer()
             self.main_price_button.element().click()
             return self
@@ -605,6 +637,7 @@ class PriceRange():
             print("PriceRange: click_price_button() Error:", error)
     
     def send_minimum(self, amount):
+        #Put in the minimum value in the element if bot is not given return false
         if(self.bot_flag.check() == False):return
         try:
             self.enter_min_field.create_pointer()
@@ -615,6 +648,7 @@ class PriceRange():
             print("PriceRange send_minimum() Error:", error)
 
     def send_maximum(self, amount):
+        #Put in the maximum and if bot is not given return fakse
         if(self.bot_flag.check() == False):return
         try:
             self.enter_max_field.create_pointer()
@@ -625,6 +659,7 @@ class PriceRange():
             print("PriceRange send_maximum() Error:", error)
     
     def click_done(self):
+        #click done after you're done outtibg in values
         if(self.bot_flag.check() == False):return
         try:
             self.done_button.create_pointer()
@@ -642,6 +677,7 @@ class PriceRange():
     
 class RedfinSearchFilter():
     def __init__(self, bot):
+        #All sub filters available within the bigger overall filters
         self._house_type = PaymentType(bot)
         self._price_range = PriceRange(bot)
         self._home_type = HomeType(bot)
@@ -654,20 +690,27 @@ class RedfinSearchFilter():
                 "BedsAndBath":"None"
             }
         }
+
+
     def payment_type(self):
+        #select and return payment type filter forrent/for sale
         return self._house_type
 
     
     def price_range(self):
+        #return the price range filter
         return self._price_range
 
     def home_type(self):
+        #return the home type filter
         return self._home_type
     
     def bed_bath_type(self):
+        #return bed and bath filter
         return self._bed_and_bath
     
     def export_settings(self, type):
+        #Export settings into a json type structure
         self.settings['Filter Settings']['Payment Type'] = self._house_type.export_settings('json')
         self.settings['Filter Settings']['Price Range'] = self._price_range.export_settings('json')
         self.settings['Filter Settings']['Home type'] = self._home_type.export_settings('json')
@@ -690,6 +733,7 @@ class RedfinSearchFilter():
 class RedfinSearch():
 
     def __init__(self, bot):
+        #Performs the area search operation in redfin website
         self.bot = bot
         self._id = _ID('redfin search', 2000)
         self.status = Flag()
@@ -743,13 +787,16 @@ class RedfinSearch():
             return error
         
     def set_location_address(self, address):
+        #set the location using address
         if(isinstance(address, str)):
             self.location_address = address
     
     def apply_filter(self, filter):
+        #apply filters and store whatever filters are fiven
         self.filter = filter
 
     def perform(self):
+        #perfor the tasks
         return self.__task()
 
     def id(self):
@@ -802,6 +849,7 @@ class Tasks():
 class GeneralLocation():
 
     def __init__(self, bot):
+        #Perform the general search where listings within all the areas are listed in the redfin website
         self.bot = bot
         self.location_address = None
         self.listing_page_bar = ListingPageBar(self.bot)
@@ -813,9 +861,11 @@ class GeneralLocation():
         #root = ElementPointer(By.CLASS_NAME, 'HomeCardContainer flex justify-center', self.bot)
 
     def address(self, address, type):
+        #save the address of whatever area it is 
         self.location_address = copy.copy(address)
     
     def save_filters(self, filter):
+        #save filters as well
         self.filter = filter
 
     def fetch_listing_data(self):
@@ -836,6 +886,8 @@ class GeneralLocation():
 
 
     def __capitalize_first_char(self, city):
+        #Capitalized the first character in a given city
+        #If there are more than 1 word in city then capitalize those as well
         print(" recieved city ", city)
         city = city.split(" ")
         print(" after spliting ", city)
@@ -870,12 +922,14 @@ class GeneralLocation():
 
         print("ABBREVIATIONS: ", STATE_ABBREVIATION[state])
         try:
+            #First search if state exists if not then create state and city
             state_exists = OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).Search()
             city_exists = OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Search()
             if(state_exists == False):
                 OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).Create()
                 OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Create()
             
+            #if state exists then just creat the city
             elif(state_exists == True):
                 if(city_exists == False):
                     OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Create()
@@ -884,10 +938,13 @@ class GeneralLocation():
 
         print(state, city, "this is another state, city")
         try:
+            #Parse out all the listing boxesthat are shown on single page of redfin
             for i in range(1, 39):
                 element = self.bot.search_element(By.XPATH, '//*[@id="results-display"]/div[5]/div/div[1]/div/div['+ str(i) + ']').get_element()
+                #Put the root element into the listing
                 listing = Listing(self.bot, element)
                 listing.print_meta_data('on')
+                #Process stuff inside those listing boxes
                 status = listing.process()
                 if(status == True):
                     #self.listings.append(listing)
@@ -895,6 +952,8 @@ class GeneralLocation():
                     #self.jsonified_listings.append((listing.export('json')))
                     print("Collected element: ", element.get_attribute('id'))
                     listing_json = listing.export('json')
+
+                    #Now when listing is process then within the chain put the data
                     try: OpenVisual_DB.ResideActionChain().Country("USA").State(STATE_ABBREVIATION[state]).City(city).Listing(listing_json['Address']).Create(listing_json)
                     except Exception as error: pass
 
@@ -1041,9 +1100,11 @@ class RedfinBot():
         #self.bot.activate()
 
     def activate(self):
+        #Activate the bot first before directly running it
         self.bot.activate()
 
     def login_to_website(self, credentials):
+        #Logs into the website using the credentials
         try:
             try:
                 val = '/html/body/div[1]/div[2]/div/div/header[2]/div[2]/div[7]/button'
@@ -1061,16 +1122,18 @@ class RedfinBot():
             #close_cookies = self.bot.search_element(By.XPATH, close_val).get_element()
             #close_cookies.click()
             
+            #put your username name here
             val = '/html/body/div[5]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/div/div/form/div/div[1]/div/span/span/div/input'
             el = self.bot.search_element(By.XPATH, val).get_element()
             el.send_keys(credentials[0])
             el.send_keys(Keys.ENTER)
             self.bot.wait(0.3)
- 
+
             vars = '/html/body/div[5]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/div/div/div[3]/button'
             el = self.bot.search_element(By.XPATH, vars).get_element()
             el.click()
 
+            #put your password here
             var1 = '/html/body/div[5]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/div/div/form/div/div[2]/span/span/div/input'
             el = self.bot.search_element(By.XPATH, var1).get_element()
             el.send_keys(credentials[1])
@@ -1081,12 +1144,14 @@ class RedfinBot():
             return LOGIN_ERROR_CODE
 
     def close_misc(self):
+        #Remove the stupid 'accept cookies' thing that shows up at bottom
         self.bot.wait(1.4)
         close_val = '/html/body/div[2]/div[2]/div/div[2]/button'
         close_cookies = self.bot.search_element(By.XPATH, close_val).get_element()
         close_cookies.click()
         
     def get_response(self):
+        #Get the response from the bot which contains info about any errors and stuff that happened while bot ran
         response = Response()
         #CLOSE UNWANTED
         self.close_misc()
@@ -1133,6 +1198,7 @@ class RedfinBot():
                 response.put_payload('Listings Added')
                 return response.get()
         
+        #IF specific search selected then run this search
         elif(self.listing_type == 'specific'):
             self.specific_fetcher.address(self._address, self.listing_type)
             self.listing_response = self.specific_fetcher.fetch_listing_data()
@@ -1189,6 +1255,7 @@ class RedfinBot():
         self._filter = filters
 
     def __apply_filters(self):
+        #Apply all the filters
         if(self._filter == None):
             print("FILTER NONE!!!")
             return
@@ -1202,6 +1269,7 @@ class RedfinBot():
             self.__apply_filter(filter)
     
     def __apply_filter(self, value):
+        #Apply the filter
         print("*****Entered single filter*****")
         home_types = ['town_house', 'condo', 'land', 'multi_family', 'mobile', 'co_op', 'other']
         if(value == 'For rent'):

@@ -1,15 +1,17 @@
+
+#Put conditional imports here
+import sys
+sys.path.insert(0, r"C:\Users\kulsh001\AppData\Local\Programs\Python\Python311\Lib\site-packages")
 import requests
 import copy
 import json
 import socket
-import sys
-sys.path.insert(0, r"C:\Users\kulsh001\AppData\Local\Programs\Python\Python311\Lib\site-packages")
-
 class RemoteServer():
     endpoint = "http://0.0.0.0:80/OpenVisualDatabase"
 
-class OperationCRUD():
 
+#BASE class for performing CRUD operations in the database
+class OperationCRUD():
     def __init__(self):
         self.operation_name = "$None"
         self.api_request = {
@@ -79,7 +81,7 @@ class OperationCRUD():
     
 
 class OperationUpdate(OperationCRUD):
-
+    #Updates the entire given chain
     def __init__(self):
         super().__init__()
         self.operation_name = "UPDATE"
@@ -93,7 +95,7 @@ class OperationUpdate(OperationCRUD):
 
 
 class OperationDelete(OperationCRUD):
-
+    #Delete operatoin which deletes the entire given chain
     def __init__(self):
         super().__init__()
         self.operation_name = "DELETE"
@@ -107,7 +109,7 @@ class OperationDelete(OperationCRUD):
     
 
 class OperationAdd(OperationCRUD):
-
+    #Add operation to add any new data like country, sate or something
     def __init__(self):
         super().__init__()
         self.operation_name = "ADD"
@@ -120,7 +122,7 @@ class OperationAdd(OperationCRUD):
         }
         
 class OperationSearch(OperationCRUD):
-
+    #SEARCH OPERATION to perform any searches within the database
     def __init__(self):
         super().__init__()
         self.operation_name = "SEARCH"
@@ -134,7 +136,7 @@ class OperationSearch(OperationCRUD):
 
 
 class OpenVisualCRUD():
-
+    #CRUD operation root object
     def __init__(self):
         self.available_operations = {
             'UPDATE':OperationUpdate(),

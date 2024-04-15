@@ -101,8 +101,10 @@ def ListingImagesEndpointVerbose():
     response = ServerResponse()
         
     print("inside route")
+    #Check if the data is json or not
     if(request.is_json == True):
         try:
+            #get the json data and extract listings requested in it
             array = request.get_json()["Listings"]
             print("array here",array)
             if(len(array) == 0):
@@ -111,12 +113,14 @@ def ListingImagesEndpointVerbose():
                 return response.get()
         
         except KeyError as error:
+            #if listing wasn't given construct a response
             response.set_error(True)
             response.put_error_log("'Listing' key is  missing in json data")
             print("'Listing' key is  missing in json data")
             return response.get()
         
         for element in array:
+            #process each listing that was given and append resulsts
             print("element array")
             responses.append(listing_images_service.fetch(element))         
             response.set_error(False)
@@ -124,14 +128,21 @@ def ListingImagesEndpointVerbose():
             return response.get()
         
     else:
+        #return the error code if request was not json
         response.set_error(True)
         response.put_error_log('Data is not json')
         return response.get()
 
+
+#On this route, only send image data in very simple format
 @app.route("/ResideLibrary/Images", methods=["POST", "GET"])
 def ListingImagesEndpoint():
+
+    #Check if client put data in a correct json format
     if(request.is_json == True):
         try:
+
+            #If yes then parse 'listing' s from it 
             address = request.get_json()["Listing"]
             print("listing here",address)
             if(len(address) == 0):
@@ -139,15 +150,23 @@ def ListingImagesEndpoint():
                 return 'None'
             
         except KeyError as error:
+            #Otherwise indicate client didn't put in 'listing' key
             print("'Listing' key is  missing in json data")
             return 'None'
         
+        #Invoke the service to fetch images on the given address
         listing = listing_images_service.fetch(address)
+
+        #if anything else except None and False is recieved then no images were found
         if(listing != None and listing != False):
             print(listing)
             return listing["Images"]
+        
+        #otherwise indicate images weren't found
         else:
             return 'None'
+    
+    #Request data isn't json
     else:
         return 'None'
      

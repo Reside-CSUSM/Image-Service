@@ -44,6 +44,8 @@ class OperationUpdateHandler(Operation):
             'Listing':OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City']).Listing(self.request_data['Listing'])
         }
 
+
+        
         if(self.request_data['Listing'] != '$None'):
             delete_response = commands['Listing'].Delete()
             if(delete_response == True):
@@ -97,6 +99,9 @@ class OperationAddHandler(Operation):
         try: state = STATE_NAMES[self.request_data['State']].GetFullName()
         except: state = self.request_data['State']
 
+        #CHAIN: Country->state->city->listing
+        #For a given chain of any number of nodes, check if the chain already exists if not then add otherwise don't add and don't launch bots
+
         response = False
         #Shouldn't launch bots if city is already there
         if(self.request_data['Country'] != '$None'):
@@ -118,6 +123,8 @@ class OperationAddHandler(Operation):
 
         #Invoke Automation Handler To add new cities
         if(response == True): return
+
+        #Run the following automation commands only when areas are given.
         if(self.request_data['State'] != '$None' and self.request_data['City'] != '$None' and self.request_data['Listing'] == '$None'):
             try: state_abbr = STATE_NAMES[self.request_data['State']].GetAbbr()
             except: state_abbr = self.request_data['State']
@@ -148,12 +155,15 @@ class OperationDeleteHandler(Operation):
             'Listing':'$None'
         }
 
+        #Convert the given state in either form abr/full name to fullname
         try: state = STATE_NAMES[self.request_data['State']].GetFullName()
         except: state = self.request_data['State']
-        commands['Country']=OpenVisual_DB.ResideActionChain().Country(self.request_data['Country'])
-        commands['State']=OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state)
-        commands['City']=OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City'])
-        commands['Listing']=OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City']).Listing(self.request_data['Listing'])
+
+        #Get the individual chain nodes like Country->state->city->listing
+        commands['Country'] = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country'])
+        commands['State'] = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state)
+        commands['City'] = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City'])
+        commands['Listing'] = OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state).City(self.request_data['City']).Listing(self.request_data['Listing'])
 
         print(self.request_data, " perform delete")
         #If any OpenVisual_DB commands return 'None' then use try except to prevent termination
@@ -170,8 +180,14 @@ class OperationSearchHandler(Operation):
         self._response = "None"
     
     def perform(self):
+
+        #Get the state name by converting it to fullname otherwise just get whatever value is for state
         try: state = STATE_NAMES[self.request_data['State']].GetFullName()
         except: state = self.request_data['State']
+
+        #Store the different structures like 'Country' 'State' and 'City and 'Listing'
+        #Chain Country->State->City->Listing
+        #Important because the operations can be performed on chains of any number of nodes.
         commands = {
             'Country':OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']),
             'State':OpenVisual_DB.ResideActionChain().Country(self.request_data['Country']).State(state),
@@ -199,12 +215,14 @@ class OpenVisualDatabaseHandler():
             'SEARCH':OperationSearchHandler()
         }
 
+    #Run the operation by fetching correct key and invoking operation object
     def __start_operation(self):
         try:
             self.response = self.operations[self.data['Operation']].perform()
         except Exception as error:
             print("can't ___start() operation OpenVisualDatabaseHandler()", error)
 
+    #Initialize and select the correct operation by fetching 'operation' to perform
     def __prepare_operation(self):
         try:
             self.operations[self.data['Operation']].save_data(self.data)
@@ -219,20 +237,3 @@ class OpenVisualDatabaseHandler():
     
     def get_response(self):
         return self.operations[self.operation_value].response()
-    
-"""
-self.automation_service_data['client_request_data']['filters'].append('For rent')
-        area = self.request_data['City'] + ", " + STATE_FULL_NAME[self.request_data['State']]
-        self.automation_service_data['client_request_data']['listing_requested']['area'].append(area)
-        Automation_Service.handle2(self.automation_service_data, 'POST')
-        self._response = Automation_Service.get_response()
-
-        self.automation_service_data['client_request_data']['filters'].pop(0)
-        self.automation_service_data['client_request_data']['filters'].append('For sale')
-        area = self.request_data['City'] + ", " + STATE_FULL_NAME[self.request_data['State']]
-        self.automation_service_data['client_request_data']['listing_requested']['area'].pop(0)
-        self.automation_service_data['client_request_data']['listing_requested']['area'].append(area)
-        Automation_Service.handle2(self.automation_service_data, 'POST')
-        self._response = Automation_Service.get_response()
-
-"""

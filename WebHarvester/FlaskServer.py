@@ -9,6 +9,13 @@ from WebHarvester.AutomationService import AutomationService
 app = Flask(__name__)
 
 
+
+
+#Global objects for use within routes
+automation_service = AutomationService()
+OpenVisualDBHandler = OpenVisualDatabaseHandler()
+
+#Construct a response for verbose endpoint
 class ServerResponse():
 
     def __init__(self):
@@ -39,9 +46,6 @@ class ServerResponse():
     def put_error_log(self, log):
         self.payload['ErrorLog'].append(log)
 
-
-automation_service = AutomationService()
-OpenVisualDBHandler = OpenVisualDatabaseHandler()
 
 @app.route("/")
 def root():
