@@ -35,6 +35,16 @@ class RedfinLauncher():
         self.response = RedfinInterface.search_images(self.data['Area'])
         RedfinInterface.close_bot()
         return self.response
+    
+    def test_mode(self):
+        #ALL these steps need need to happen in order run the bot
+        RedfinInterface.create_bot()
+        RedfinInterface.activate()
+        RedfinInterface.type("general")
+        RedfinInterface.apply_filters([self.data['Filter']])
+        response = RedfinInterface.search_images(self.data['Area'])
+        RedfinInterface.close_bot()
+        return response
         
 
 class AutomationLauncher():

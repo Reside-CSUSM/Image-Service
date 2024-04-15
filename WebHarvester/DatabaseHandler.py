@@ -45,7 +45,6 @@ class OperationUpdateHandler(Operation):
         }
 
 
-        
         if(self.request_data['Listing'] != '$None'):
             delete_response = commands['Listing'].Delete()
             if(delete_response == True):
