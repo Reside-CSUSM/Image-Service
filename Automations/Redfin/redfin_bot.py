@@ -192,6 +192,20 @@ class ElementPointer():
 
 #---------------------------------------- DATA COLLECTION MODULES---------------------------------------------
 
+class ListingAmenities():
+
+    def __init__(self, root_element):
+        self.root_element = root_element
+
+    def process(self):
+        #Click on the listing box to get to the page
+        self.root_element.click()
+        
+        #Get to the root of amenities section
+        amenities_root = ElementPointer()
+    def export(self):
+        pass
+
 
 class Listing():
 
