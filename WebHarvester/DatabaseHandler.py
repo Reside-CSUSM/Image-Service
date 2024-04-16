@@ -54,8 +54,8 @@ class OperationUpdateHandler(Operation):
                 else: create_response = commands['Listing'].Create()
             
         elif(self.request_data['City'] != '$None'): 
-            delete_response = commands['City'].Delete()
-            if(delete_response == True):
+            delete_response_city = commands['City'].Delete()
+            if(delete_response_city == True):
                 create_response = commands['City'].Create()
 
         #DON'T ALLOW OPERATION ON STATES AND COUNTRIES
@@ -70,6 +70,7 @@ class OperationUpdateHandler(Operation):
                 create_response = commands['Country'].Create()
 
         #Invoke Automation Launcher to re collect data and update the database
+
         try: state_abbr = STATE_NAMES[self.request_data['State']].GetAbbr()
         except: state_abbr = self.request_data['State']
         self.automation_settings['Area'] = self.request_data['City'] + ", " + state_abbr
