@@ -14,7 +14,7 @@
             "methods":["GET", "POST", "PUT"],
             "headers":{
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST"
+                "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE"
             }
 
         }
