@@ -8,10 +8,10 @@ from flask import Flask, request
 
 #Remove this header please
 from bson import ObjectId
-from WebProvider.ListingsService import ListingService
+#from WebProvider.ListingsService import ListingService
 
 #Enable this header pls
-#from .ListingsService import ListingService
+from .ListingsService import ListingService
 
 
 ########### [TEMPORARY IMPORTS]###########
