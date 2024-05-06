@@ -134,3 +134,42 @@ def ConsoleStartUp():
             break
 
 ConsoleStartUp()
+
+"""
+
+SAN DIEGO COUNTY
+Carlsbad     -done
+Chula Vista  - done
+Coronado  - not done
+Del Mar - done
+El Cajon - done
+Encinitas - done
+Escondido - done
+Imperial Beach - done
+La Mesa - Done
+Lemon Grove - Done
+National City - done
+Oceanside - Done
+Poway - Done
+San Diego - Done
+San Marcos - Done
+Santee - Done
+Solana Beach - done
+Vista - Done
+San Ysidro - done
+La Jolla - done
+Spring Valley - Done
+Ramona - done
+Valley Center - done
+Bonsall - done
+Rancho Santa Fe - done
+Pauma Valley - done
+Jamul - done
+Bonita - done
+Coronado - done
+Julian - done
+Pine Valley - done
+Descanso - done
+
+
+"""

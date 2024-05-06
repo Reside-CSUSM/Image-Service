@@ -5,7 +5,21 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 print(sys.path[0], "<--this")
 from flask import Flask, request
-from .ListingsService import ListingService
+
+#Remove this header please
+from bson import ObjectId
+from WebProvider.ListingsService import ListingService
+
+#Enable this header pls
+#from .ListingsService import ListingService
+
+
+########### [TEMPORARY IMPORTS]###########
+#CODE SECTION ID: JAVA_BACKEND
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+#########################################
+
 app = Flask(__name__)
 
 
@@ -93,6 +107,76 @@ def details():
        \n
     """
     return Details
+
+#################################### [TEMPORARY]####################
+#CODE SECTION ID: JAVA_BACKEND
+#Temporary routes, only available because of java deployment doesn't work
+##Added 5/5/2024
+
+uri2 = "mongodb+srv://to-Gabriel:zynsog-5Ziwso-syfniw@residecluster.uyk5fmd.mongodb.net/reside-backend"
+uri = "mongodb+srv://yashaswikul:yash18hema06@cluster0.vktjrwl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+mongo_client = MongoClient(uri2, server_api=ServerApi('1'))
+database = mongo_client["reside-backend"]
+
+@app.route("/addUserFavoriteListing", methods=['GET', 'POST'])
+def AddUserFavoriteListing():
+    listingId = request.args.get('listingId', type=str ,default='')
+    listingId = ObjectId(listingId)
+    userId = request.args.get('userId', type=str ,default='')
+
+    #Adds the user which favorited to listing collection which contains seenBy array
+    listing_collection = database.get_collection("listings")  
+    listing = listing_collection.find_one({"_id":listingId})
+
+    print("args:", listingId, userId)
+    #Return with message if listing doesn't exist  
+    if(listing == None):
+        print(listing, " failed value")
+        return "Listing with this ID doesn't exists"
+    
+    for id in listing["viewedBy"]:
+        if(userId == id):
+            return "user already exists"
+        
+    #Add the user here
+    #WARNING: It doesn't check here the status of update command here before returning success message
+    listing["viewedBy"].append(userId)
+    listing_collection.find_one_and_update({"_id":listingId}, {"$set":listing})
+    return "user has been successfully added to listing viewedBy array"
+
+@app.route("/deleteUserFavoriteListing", methods=['GET', 'POST'])
+def DeleteUserFavoriteListing():
+    listingId = request.args.get('listingId', type=str ,default='')
+    listingId = ObjectId(listingId)
+    userId = request.args.get('userId', type=str ,default='')
+
+    #removes the user which favorited to listing collection which contains seenBy array
+    listing_collection = database.get_collection("listings")  
+    listing = listing_collection.find_one({"_id":listingId})
+
+    print("args:", listingId, userId)
+    #Return with message if listing doesn't exist  
+    if(listing == None):
+        print(listing, " failed value")
+        return "Listing with this ID doesn't exists"
+    
+    found = False
+    for id in listing["viewedBy"]:
+        if(userId == id):
+            found = True
+    
+    if(found == False):
+        return "User already doesn't exists"
+    
+    #Add the user here
+    #WARNING: It doesn't check here the status of update command here before returning success message
+    listing["viewedBy"].remove(userId)
+    listing_collection.find_one_and_update({"_id":listingId}, {"$set":listing})
+    return "user has been successfully removed from the listing viewedBy array"
+
+####################################################################################################
+
+
 
 
 @app.route("/ResideLibraryVerbose/Images", methods=["POST", "GET"])
