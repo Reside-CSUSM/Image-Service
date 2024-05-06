@@ -178,7 +178,6 @@ def DeleteUserFavoriteListing():
 
 
 
-
 @app.route("/ResideLibraryVerbose/Images", methods=["POST", "GET"])
 def ListingImagesEndpointVerbose():
     responses = []
