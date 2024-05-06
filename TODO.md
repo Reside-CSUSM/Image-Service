@@ -19,7 +19,9 @@
 #Fix address parsing issue in database. Modify string filter or not use it because sometimes it parses out important symbpols like # in some addresses
 
 
-$Fix City, State resolution problem cuz otherwise bots are not going to launch. DONE
+Fix City, State resolution problem cuz otherwise bots are not going to launch. DONE
 
 #Need to fix what happens if we type in wrong name of the state or city in client then it will launcg bot which then goes onto 
 searching a different city of opposite choice. Also in the database since there is no 'completeAddress' field it will show addresses of wrong city listed.  Need to resolve this issue as well. Solution either prepare search so that it is more specific. Also have something in place that shows complete address field as well. 
+
+

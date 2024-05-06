@@ -79,6 +79,8 @@ def RentcastList():
 #Model rentcast listing objects
 #Compare them with library objects
 
+
+#THIS FILE CHECKS THE DISCREPENCY AND HOW MANY LISTINGS ARE MATCHING WITH OPEN VISUAL API AND RENTCASST API
 RentcastList()
 
 #1650, 850, 320, 1642, 823 Nordahl, 250 Knoll Rd,San Marcos, CA 92069, 768 Woodward St,San Marcos, CA

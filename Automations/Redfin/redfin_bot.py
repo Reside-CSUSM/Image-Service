@@ -6,7 +6,7 @@ dir = parent_dir_path.replace("\Automations", "")
 print(dir)
 sys.path.insert(0, dir)
 print(sys.path[0], "<--this")
-from Utility.bot import Bot
+from Utility.bot import Bot, StealthBot, UndetectedBot
 from selenium import webdriver
 from Utility.utility import _ID, Flag
 from selenium.webdriver.common.keys import Keys
@@ -192,12 +192,51 @@ class ElementPointer():
 
 #---------------------------------------- DATA COLLECTION MODULES---------------------------------------------
 
+class ListingAmenities():
+
+    def __init__(self, bot, root_element):
+        self.bot = bot
+        self.root_element = root_element
+        self.amenities_data = {
+
+        }
+
+    def process(self):
+        #Click on the listing box to get to the page
+        try:
+            #First click on the listings box that appears on the page
+            #print(self.root_element.get_attribute('innerHTML'))
+            self.root_element.click()
+
+            #Now switch to the new window that opens up for the listing
+            number_of_windows = len(self.bot.get_driver().window_handles)
+            self.bot.wait(2)
+            if(number_of_windows > 1): self.bot.get_driver().switch_to.window(window_name=self.bot.get_driver().window_handles[1])
+
+            #Now at last close the new window for the listing page
+            self.bot.wait(2)
+            self.bot.get_driver().switch_to.window(window_name=self.bot.get_driver().window_handles[1])
+            self.bot.get_driver().close()
+
+            #Switch back to the original window to continue same process for other listings
+            self.bot.get_driver().switch_to.window(window_name=self.bot.get_driver().window_handles[0])
+            self.bot.wait(0)
+
+        except Exception as error:
+            print(error)
+            return False
+        
+
+    def export(self):
+        return self.amenities_data
+
 
 class Listing():
 
     def __init__(self, bot, el_ptr):
         self.bot = bot
         self.element_ptr = el_ptr
+        self.listing_amenities = ListingAmenities(self.bot, self.element_ptr)
         self.price = "No price"
         self.address = "No address"
         self.stats = "No stats"
@@ -342,7 +381,12 @@ class Listing():
         if(has_address.check() == False):
             self.processed_flag.set_false()
         
+        #_______________TESTING AREA, CAN BE REMOVED IF DOESN'T WORK_____________
+        #status = self.listing_amenities.process()
+        #________________________________________________________________________
+
         return self.processed_flag.check()
+
 
     def get_status(self):
         return self.processed_flag.check()
@@ -960,6 +1004,7 @@ class GeneralLocation():
                 else:print("\x1b[31mCouldn't collect element\x1b[0m", element.get_attribute('id'))
         except Exception as error:
             print("Element not found", error)
+        
 
 
 class SpecificLocation():
@@ -1086,8 +1131,17 @@ class RedfinBot():
         options.page_load_strategy = 'eager'
         #options.add_argument('--headless')
         #options.add_argument('--disable-gpu')
+        
+        """Original bot functionality"""
         self.driver = webdriver.Chrome(options=options)
         self.bot = Bot(INIT_URL, self.driver)
+        
+        """Selenium Stealth Mode Bot"""
+        #self.bot = StealthBot(INIT_URL)
+
+        """Undetected Chrome Driver Mode Bot"""
+        #self.bot = UndetectedBot(INIT_URL)
+
         self.tasks = Tasks()
         self.redfin_search = RedfinSearch(self.bot)
         self.redfin_filter = RedfinSearchFilter(self.bot)

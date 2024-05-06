@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium_stealth import stealth
+import undetected_chromedriver as ucdriver
 import time
 from collections import deque
 from .utility import Flag
@@ -160,3 +162,31 @@ class Bot():
     
     def close(self):
         self.driver.quit()
+
+
+class StealthBot(Bot):
+
+    def __init__(self, url):
+        options = webdriver.ChromeOptions()
+        options.page_load_strategy = 'eager'
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        self.driver = webdriver.Chrome(options=options)
+    
+        stealth(self.driver, languages=["en-US", "en"], vendor=("Google Inc."), platform="win32", webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine")
+        super().__init__(url, self.driver)
+
+class UndetectedBot(Bot):
+
+    def __init__(self, url):
+        options = ucdriver.ChromeOptions()
+        profile = r"C:\Users\yasha\AppData\Local\Google\Chrome\User Data\Default"
+        options.page_load_strategy = 'eager'
+        options.add_argument("user-data-dir=" + profile)
+        driver = ucdriver.Chrome(options=options, use_subprocess=True)
+        Bot.__init__(self, url, driver)
+        
+
+
+        
