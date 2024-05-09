@@ -18,3 +18,8 @@ eg Coronado, CA      if you type this in it would show dialog box after u enter 
 
 
 
+# DATE 5/8/2024 10:59 PM
+1) Noticed that 'images' attribute in mongoDb document for each listing only contained at most 3 image urls. After debugging later it was found that 
+   redfin has changed how the images are loaded and displayed on those little listing boxes. If you click little arrows then you can clearly see rest of the other images just loading after the arrow button is clicked. This is why it has been happening. 
+
+   SOL: To adapt the code to this change by clicking on the arrow button as well so that it doesn't happen again
